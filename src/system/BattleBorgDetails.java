@@ -33,7 +33,7 @@ public class BattleBorgDetails {
     }
 
     private void printBorgCounts(int battle) throws IOException {
-        IntBuffer scriptAddresses = StoryUtils.getBattleScriptAddresses(battle).position(2);
+        IntBuffer scriptAddresses = (IntBuffer) StoryUtils.getBattleScriptAddresses(battle).position(2);
         List<BorgEvent> borgEvents = new ArrayList<>();
         Map<Integer, Integer> borgCounts = new TreeMap<>();
         while (scriptAddresses.hasRemaining()) {
@@ -81,18 +81,19 @@ public class BattleBorgDetails {
     }
 
     public static String toASCII(String chars) {
-        String ascii = "";
-        for(int i = 0, l = chars.length(); i < l; i++) {
-            char c = chars.charAt(i);
+       StringBuilder ascii = new StringBuilder();
+       for (int i = 0; i < chars.length(); i++) {
+           char c = chars.charAt(i);
 
-            // make sure we only convert half-full width char
-//            if (c >= 0xFF00 && c <= 0xFFEF) {
-                c = (char) (0xFF & (c + 0x20));
-//            }
+           //Check if the character is half-width or full-width (variable-width character)
+           if (c >= 0xFF00 && c <= 0xFFEF) {
+               c = (char) (0xFF & (c - 0xFEE0));
+           }
 
-            ascii += c;
-        }
+           ascii.append(c);
+       }
 
-        return ascii;
+       return ascii.toString();
     }
+
 }

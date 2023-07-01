@@ -15,7 +15,7 @@ public class BorgCombinationCostCalculator {
 
     public static void main(String[] args) throws IOException {
         int battleId = Utils.getHexInput("Please enter the Battle ID: ");
-        IntBuffer scriptAddresses = StoryUtils.getBattleScriptAddresses(battleId).position(2);
+        IntBuffer scriptAddresses = (IntBuffer) StoryUtils.getBattleScriptAddresses(battleId).position(2);
         List<BorgEvent> borgEvents = new ArrayList<>();
         Map<Integer, Integer> borgCounts = new TreeMap<>();
         while (scriptAddresses.hasRemaining()) {
@@ -77,13 +77,9 @@ public class BorgCombinationCostCalculator {
         }
 
         public Integer getCost() {
-            if (cost == null) {
-                //TODO: Turn this into a one-liner.
-                cost = 0;
-                speciesCount.forEach((key, value) -> cost += (int) (key.getCost() / 1.5 * value));
-            }
-            return cost;
+            return cost == null ? (cost = speciesCount.entrySet().stream().mapToInt(entry -> (int) (entry.getKey().getCost() / 1.5 * entry.getValue())).sum()) : cost;
         }
+
 
         @Override
         public String toString() {

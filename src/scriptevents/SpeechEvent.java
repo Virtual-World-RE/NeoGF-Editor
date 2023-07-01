@@ -3,8 +3,6 @@ package scriptevents;
 import enums.Commander;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SpeechEvent extends ScriptEvent {
 
