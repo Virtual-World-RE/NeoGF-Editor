@@ -8,7 +8,7 @@ public class FocusEvent extends ScriptEvent {
 
     private BorgSpecies borgSpecies;
     private boolean pause;
-    private int focalPoint;
+    private int joint;
     private float distance;
     private float duration;
 
@@ -32,12 +32,12 @@ public class FocusEvent extends ScriptEvent {
         this.pause = pause;
     }
 
-    public int getFocalPoint() {
-        return focalPoint;
+    public int getJoint() {
+        return joint;
     }
 
-    public void setFocalPoint(int focalPoint) {
-        this.focalPoint = focalPoint;
+    public void setJoint(int joint) {
+        this.joint = joint;
     }
 
     public float getDistance() {
@@ -58,6 +58,13 @@ public class FocusEvent extends ScriptEvent {
 
     @Override
     public ByteBuffer getAsBytes() {
-        return super.getAsBytes();
+        ByteBuffer buffer = super.getAsBytes();
+        buffer.putShort(0x8, (short) getBorgSpecies().getId());
+        buffer.put(0xa, (byte) 0x73);
+        buffer.put(0xb, (byte) (isPause() ? 1 : 0));
+        buffer.put(0x10, (byte) getJoint());
+        buffer.putFloat(0x14, getDistance());
+        buffer.putFloat(0x18, getDuration());
+        return buffer;
     }
 }

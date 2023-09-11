@@ -2,16 +2,54 @@ package utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 public class Utils {
 
     private static Map<Short, Character> capcomTable = new HashMap<>();
+    private static Map<Integer, Integer> dataSectionMap = new TreeMap<>(Collections.reverseOrder());
+
+    private static Integer getOffsetForDataAddress(int address) throws IOException {
+        if (dataSectionMap.isEmpty()) {
+            RandomAccessFile raf = getRaf();
+            for (int i = 0; i <= 10; i++) {
+                int dataOffset = seekRaf(raf, 0x1c + i * 4, new byte[4]).asIntBuffer().get();
+                int dataAddress = seekRaf(raf, 0x64 + i * 4, new byte[4]).asIntBuffer().get();
+                if (dataOffset > 0 && dataAddress < 0) {
+                    dataSectionMap.put(dataAddress, dataOffset);
+                }
+            }
+        }
+        for (Map.Entry<Integer, Integer> dataSection : dataSectionMap.entrySet()) {
+            if (address > dataSection.getKey()) {
+                return 0x7fffffff & dataSection.getKey() - dataSection.getValue();
+            }
+        }
+        return -1;
+    }
+
+//    private static int getOffsetForDataAddress(int address) throws IOException {
+//        return dataSectionMap.get(address);
+//    }
 
     public static RandomAccessFile getRaf() throws FileNotFoundException {
-        File file = new File(Utils.class.getClassLoader().getResource("mem1.raw").getPath());
+//        File file = new File(Utils.class.getClassLoader().getResource("mem1.raw").getPath());
+        File file = new File(Utils.class.getClassLoader().getResource("boot.dol").getPath());
         return new RandomAccessFile(file, "rw");
+    }
+
+    public static ByteBuffer seekRaf(int address, byte[] magic) throws IOException {
+        return seekRaf(getRaf(), address, magic);
+    }
+
+    public static ByteBuffer seekRaf(RandomAccessFile raf, int address, byte[] magic) throws IOException {
+        if ((address & 0xffffffffL) >= 0x100) address -= getOffsetForDataAddress(address);
+        raf.seek(0xffffff & address);
+        raf.readFully(magic);
+        return ByteBuffer.wrap(magic);
     }
 
     public static String getAsHexString(int number) {

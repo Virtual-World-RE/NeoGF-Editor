@@ -1,7 +1,6 @@
 package system;
 
-import scriptevents.BorgEvent;
-import structures.Borg;
+import scriptevents.SpawnEvent;
 import utils.BorgListUtils;
 import utils.StoryUtils;
 import utils.Utils;
@@ -19,11 +18,11 @@ public class BattleBorgDetails {
 
     public static void main(String[] args) throws IOException {
 
-//        List<BorgSpecies> borgSpeciesList = BorgSpecies.getAllBorgSpecies().values().stream().sorted(Comparator.comparing(BorgSpecies::getId)).collect(Collectors.toList());
-//        for (BorgSpecies borgSpecies : borgSpeciesList) {
-////            System.out.println(String.format("%08x %08x", borgSpecies.getId()));
-//            System.out.println(borgSpecies.getNo());
-//        }
+        List<BorgSpecies> borgSpeciesList = BorgSpecies.getAllBorgSpecies().values().stream().sorted(Comparator.comparing(BorgSpecies::getId)).collect(Collectors.toList());
+        for (BorgSpecies borgSpecies : borgSpeciesList) {
+//            System.out.println(String.format("%08x %08x", borgSpecies.getId()));
+            System.out.println(borgSpecies.getLevelRate().ordinal());
+        }
 //
 //        Borg borg = new Borg(BorgSpecies.getBorgSpecies(0x615));
 
@@ -34,13 +33,13 @@ public class BattleBorgDetails {
 
     private void printBorgCounts(int battle) throws IOException {
         IntBuffer scriptAddresses = (IntBuffer) StoryUtils.getBattleScriptAddresses(battle).position(2);
-        List<BorgEvent> borgEvents = new ArrayList<>();
+        List<SpawnEvent> spawnEvents = new ArrayList<>();
         Map<Integer, Integer> borgCounts = new TreeMap<>();
         while (scriptAddresses.hasRemaining()) {
-            borgEvents.addAll(StoryUtils.readBattleScript(scriptAddresses.get()).stream().filter(se ->
-                    se instanceof BorgEvent).map(BorgEvent.class::cast).collect(Collectors.toList()));
+            spawnEvents.addAll(StoryUtils.readBattleScript(scriptAddresses.get()).stream().filter(se ->
+                    se instanceof SpawnEvent).map(SpawnEvent.class::cast).collect(Collectors.toList()));
         }
-        borgEvents.forEach(be -> borgCounts.put(be.getId(), borgCounts.containsKey(be.getId()) ? borgCounts.get(be.getId()) + 1 : 1));
+        spawnEvents.forEach(be -> borgCounts.put(be.getId(), borgCounts.containsKey(be.getId()) ? borgCounts.get(be.getId()) + 1 : 1));
 
         if (!borgCounts.isEmpty()) System.out.println("\nEnemy Script Borg Counts:");
 

@@ -14,25 +14,20 @@ import java.util.*;
 
 public class BorgUtils {
 
-    private static final int BORG_GROUP_LENGTHS_START_ADDRESS = 0x2c9480;
-    private static final int COSTS_START_ADDRESS = 0x2e3764;
-    private static final int COLORS_START_ADDRESS = 0x2e3870;
-    private static final int LEVEL_PROPERTIES_START_ADDRESS = 0x2f8d38;
-    private static final int NO_START_ADDRESS = 0x2f8fc8;
-    private static final int BORG_TRIBES_START_ADDRESS = 0x2f91d8;
-    private static final int RARITY_START_ADDRESS = 0x2f9cbc;
-    private static final int LEVEL_RATE_START_ADDRESS = 0x2f9dc8;
-    private static final int BORG_NAMES_START_ADDRESS = 0x357ca0;
-    private static final int STORY_VALUES_START_ADDRESS = 0x36218c;
-    private static final int TRIBE_NAMES_START_ADDRESS = 0x398674;
+    private static final int BORG_GROUP_LENGTHS_START_ADDRESS = 0x802c9480;
+    private static final int COSTS_START_ADDRESS = 0x802e3764;
+    private static final int COLORS_START_ADDRESS = 0x802e3870;
+    private static final int LEVEL_PROPERTIES_START_ADDRESS = 0x802f8d38;
+    private static final int NO_START_ADDRESS = 0x802f8fc8;
+    private static final int BORG_TRIBES_START_ADDRESS = 0x802f91d8;
+    private static final int RARITY_START_ADDRESS = 0x802f9cbc;
+    private static final int LEVEL_RATE_START_ADDRESS = 0x802f9dc8;
+    private static final int BORG_NAMES_START_ADDRESS = 0x80357ca0;
+    private static final int STORY_VALUES_START_ADDRESS = 0x8036218c;
+    private static final int TRIBE_NAMES_START_ADDRESS = 0x80398674;
 
     public static Set<Integer> getBorgIds(int groupId) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
-        int borgsStartAddress = BORG_GROUP_LENGTHS_START_ADDRESS + groupId;
-        byte[] magic = new byte[1];
-        raf.seek(borgsStartAddress);
-        raf.readFully(magic);
-        ByteBuffer buffer = ByteBuffer.wrap(magic);
+        ByteBuffer buffer = Utils.seekRaf(BORG_GROUP_LENGTHS_START_ADDRESS + groupId, new byte[1]);
         Set<Integer> borgIds = new HashSet<>();
         for (int i = 0; i < buffer.get(0); i++) {
             borgIds.add((groupId << 8) | i);
@@ -49,19 +44,13 @@ public class BorgUtils {
     }
 
     public static Map<BorgColor, Integer> getCosts(int id) throws IOException {
+        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        RandomAccessFile raf = Utils.getRaf();
-        byte[] magic = new byte[4];
-        raf.seek(COSTS_START_ADDRESS + group * 4);
-        raf.readFully(magic);
-        ByteBuffer buffer = ByteBuffer.wrap(magic);
+        ByteBuffer buffer = Utils.seekRaf(raf,COSTS_START_ADDRESS + group * 4, new byte[4]);
         int groupStartAddress = buffer.getInt();
         int count = BorgColor.values().length;
-        magic = new  byte[2 * count];
-        raf.seek(0xffffff & groupStartAddress + slot * 2 * count);
-        raf.readFully(magic);
-        buffer = ByteBuffer.wrap(magic);
+        buffer = Utils.seekRaf(raf,groupStartAddress + slot * 2 * count, new byte[2 * count]);
         Map<BorgColor, Integer> borgCosts = new HashMap<>();
         for (BorgColor borgColor : BorgColor.values()) {
             borgCosts.put(borgColor, (int) buffer.getShort());
@@ -70,18 +59,12 @@ public class BorgUtils {
     }
 
     public static Set<BorgColor> getColors(int id) throws IOException {
+        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        RandomAccessFile raf = Utils.getRaf();
-        byte[] magic = new byte[4];
-        raf.seek(COLORS_START_ADDRESS + group * 4);
-        raf.readFully(magic);
-        ByteBuffer buffer = ByteBuffer.wrap(magic);
+        ByteBuffer buffer = Utils.seekRaf(raf,COLORS_START_ADDRESS + group * 4, new byte[4]);
         int groupStartAddress = buffer.getInt();
-        magic = new  byte[1];
-        raf.seek(0xffffff & groupStartAddress + slot);
-        raf.readFully(magic);
-        buffer = ByteBuffer.wrap(magic);
+        buffer = Utils.seekRaf(groupStartAddress + slot, new byte[1]);
         Set<BorgColor> borgColors = new HashSet<>();
         for (int i = 0; i < BorgColor.values().length; i++) {
             boolean hasColor = (buffer.get(0) & (1 << i)) != 0;

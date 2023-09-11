@@ -1,7 +1,7 @@
 package system;
 
 import enums.BorgColor;
-import scriptevents.BorgEvent;
+import scriptevents.SpawnEvent;
 import utils.BorgListUtils;
 import utils.StoryUtils;
 import utils.Utils;
@@ -16,13 +16,13 @@ public class BorgCombinationCostCalculator {
     public static void main(String[] args) throws IOException {
         int battleId = Utils.getHexInput("Please enter the Battle ID: ");
         IntBuffer scriptAddresses = (IntBuffer) StoryUtils.getBattleScriptAddresses(battleId).position(2);
-        List<BorgEvent> borgEvents = new ArrayList<>();
+        List<SpawnEvent> spawnEvents = new ArrayList<>();
         Map<Integer, Integer> borgCounts = new TreeMap<>();
         while (scriptAddresses.hasRemaining()) {
-            borgEvents.addAll(StoryUtils.readBattleScript(scriptAddresses.get()).stream().filter(se ->
-                    se instanceof BorgEvent).map(BorgEvent.class::cast).collect(Collectors.toList()));
+            spawnEvents.addAll(StoryUtils.readBattleScript(scriptAddresses.get()).stream().filter(se ->
+                    se instanceof SpawnEvent).map(SpawnEvent.class::cast).collect(Collectors.toList()));
         }
-        borgEvents.forEach(be -> borgCounts.put(be.getId(), borgCounts.containsKey(be.getId()) ? borgCounts.get(be.getId()) + 1 : 1));
+        spawnEvents.forEach(be -> borgCounts.put(be.getId(), borgCounts.containsKey(be.getId()) ? borgCounts.get(be.getId()) + 1 : 1));
 
         // Borg Loading Finished - Now calculating Cost...
         int fixedCost = 0;

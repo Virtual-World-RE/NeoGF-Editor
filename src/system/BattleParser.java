@@ -21,6 +21,9 @@ public class BattleParser {
     public static void main(String[] args) throws IOException {
         BattleParser main = new BattleParser();
 
+//        StoryUtils.readBattleScript(StoryUtils.getBattleScriptAddresses(0x17).get(2));
+        BorgUtils.getColors(0xf07);
+
 //        for (BorgSpeciesThing borgSpeciesThing : main.borgSpeciesMap.values()) {
 //            int id = Integer.parseInt(borgSpeciesThing.getId(), 16);
 //            int number = borgSpeciesThing.getNo();
@@ -35,7 +38,7 @@ public class BattleParser {
         Borg borg = new Borg(BorgSpecies.getBorgSpecies(6));
         BorgUtils.getTribeNameEng(0);
         main.readInternal(main.getInternalAddress(2));
-        StoryUtils.getBattleConfiguration(StoryUtils.getBattleConfigurationAddress(10));
+        StoryUtils.readBattleConfiguration(StoryUtils.getBattleConfigurationAddress(10));
         BorgUtils.getLevelProperties(0x000);
         BorgSpecies.getAllBorgSpecies().values().stream().filter(s -> {
             try {
@@ -109,7 +112,7 @@ public class BattleParser {
         scriptEvents.add(voiceEvent);
         for (int i = 0; i < 200; i++) {
             SpeechEvent speechEvent = new SpeechEvent(0, 0, 5, 5);
-            speechEvent.setWait(true);
+            speechEvent.setQueue(true);
             speechEvent.setVisible(true);
             speechEvent.setSound(i);
             speechEvent.setCommander(Commander.MANA);

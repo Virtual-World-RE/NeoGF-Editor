@@ -9,7 +9,7 @@ public class SpeechEvent extends ScriptEvent {
     private Commander commander;
     private int sound;
     private boolean visible;
-    private boolean wait;
+    private boolean queue;
 
     public SpeechEvent(int timer1, int timer2, int slot1, int slot2) {
         super(timer1, timer2, slot1, slot2);
@@ -39,12 +39,12 @@ public class SpeechEvent extends ScriptEvent {
         this.visible = visible;
     }
 
-    public boolean isWait() {
-        return wait;
+    public boolean isQueue() {
+        return queue;
     }
 
-    public void setWait(boolean wait) {
-        this.wait = wait;
+    public void setQueue(boolean queue) {
+        this.queue = queue;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SpeechEvent extends ScriptEvent {
         buffer.put(0xb, ((byte) getCommander().ordinal()));
         buffer.put(0xc, ((byte) getSound()));
         buffer.put(0xd, (byte) (isVisible() ? 1 : 0));
-        buffer.put(0xe, (byte) (isWait() ? 1 : 0));
+        buffer.put(0xe, (byte) (isQueue() ? 1 : 0));
         return buffer;
     }
 }
