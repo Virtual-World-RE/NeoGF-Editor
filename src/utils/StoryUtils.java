@@ -138,7 +138,8 @@ public class StoryUtils {
         byte[] magic = new byte[32];
 
         while (true) {
-            ByteBuffer byteBuffer = Utils.seekRaf(raf, startAddress, magic);
+            Utils.seekRaf(raf, startAddress, magic);
+            ByteBuffer byteBuffer = ByteBuffer.wrap(magic);
             if (byteBuffer.getShort(0) == (short) 0xffff || byteBuffer.getShort(0) == 0x7fff) break;
             int timer1 = byteBuffer.getShort(0x0) & 0xffff;
             int timer2 = byteBuffer.getShort(0x2) & 0xffff;
@@ -226,52 +227,52 @@ public class StoryUtils {
     }
 
     public static void addStory(int index, int configurationAddress, List<Integer> scriptAddresses) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+    RandomAccessFile raf = Utils.getRaf();
 
-        // Determine the current size of the file
-        long fileSize = raf.length();
+    // Determine the current size of the file
+    long fileSize = raf.length();
 
-        // Calculate the write offsets for the new data
-        long configOffset = BATTLE_CONFIGURATION_START_ADDRESS + index * 4;
-        long scriptsOffset = BATTLE_SCRIPTS_START_ADDRESS + index * 16;
+    // Calculate the write offsets for the new data
+    long configOffset = BATTLE_CONFIGURATION_START_ADDRESS + index * 4;
+    long scriptsOffset = BATTLE_SCRIPTS_START_ADDRESS + index * 16;
 
-        // Move the existing data after the write offsets
-        moveData(raf, configOffset, fileSize, configurationAddress);
-        moveData(raf, scriptsOffset, fileSize, scriptAddresses.toArray(new Integer[0]));
+    // Move the existing data after the write offsets
+    moveData(raf, configOffset, fileSize, configurationAddress);
+    moveData(raf, scriptsOffset, fileSize, scriptAddresses.toArray(new Integer[0]));
 
-        // Write the new data at the write offsets
-        raf.seek(configOffset);
-        byte[] configAddressBytes = ByteBuffer.allocate(4).putInt(configurationAddress).array();
-        raf.write(configAddressBytes);
+    // Write the new data at the write offsets
+    raf.seek(configOffset);
+    byte[] configAddressBytes = ByteBuffer.allocate(4).putInt(configurationAddress).array();
+    raf.write(configAddressBytes);
 
-        raf.seek(scriptsOffset);
-        for (int i = 0; i < scriptAddresses.size(); i++) {
-            byte[] scriptAddressBytes = ByteBuffer.allocate(4).putInt(scriptAddresses.get(i)).array();
-            raf.write(scriptAddressBytes);
-        }
+    raf.seek(scriptsOffset);
+    for (int i = 0; i < scriptAddresses.size(); i++) {
+        byte[] scriptAddressBytes = ByteBuffer.allocate(4).putInt(scriptAddresses.get(i)).array();
+        raf.write(scriptAddressBytes);
     }
+}
 
-    private static void moveData(RandomAccessFile raf, long sourceOffset, long fileSize, Integer... newValues) throws IOException {
-        // Move the data after sourceOffset to the end of the file
-        byte[] buffer = new byte[1024];
-        long bytesRead;
-        long bytesToMove = fileSize - sourceOffset;
+private static void moveData(RandomAccessFile raf, long sourceOffset, long fileSize, Integer... newValues) throws IOException {
+    // Move the data after sourceOffset to the end of the file
+    byte[] buffer = new byte[1024];
+    long bytesRead;
+    long bytesToMove = fileSize - sourceOffset;
 
-        while (bytesToMove > 0) {
-            int bytesToRead = (int) Math.min(buffer.length, bytesToMove);
-            raf.seek(sourceOffset);
-            bytesRead = raf.read(buffer, 0, bytesToRead);
-            raf.seek(fileSize + bytesRead);
-            raf.write(buffer, 0, (int) bytesRead);
-            sourceOffset += bytesRead;
-            bytesToMove -= bytesRead;
-        }
-
-        // Write the new values at sourceOffset
+    while (bytesToMove > 0) {
+        int bytesToRead = (int) Math.min(buffer.length, bytesToMove);
         raf.seek(sourceOffset);
-        for (int i = 0; i < newValues.length; i++) {
-            byte[] valueBytes = ByteBuffer.allocate(4).putInt(newValues[i]).array();
-            raf.write(valueBytes);
-        }
+        bytesRead = raf.read(buffer, 0, bytesToRead);
+        raf.seek(fileSize + bytesRead);
+        raf.write(buffer, 0, (int) bytesRead);
+        sourceOffset += bytesRead;
+        bytesToMove -= bytesRead;
     }
+
+    // Write the new values at sourceOffset
+    raf.seek(sourceOffset);
+    for (int i = 0; i < newValues.length; i++) {
+        byte[] valueBytes = ByteBuffer.allocate(4).putInt(newValues[i]).array();
+        raf.write(valueBytes);
+    }
+}
 }

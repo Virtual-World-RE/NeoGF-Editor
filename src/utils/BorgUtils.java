@@ -82,7 +82,9 @@ public class BorgUtils {
         RandomAccessFile raf = Utils.getRaf();
         ByteBuffer buffer;
         for (int i = 0; i < levelCount; i++) {
-            buffer = Utils.seekRaf(raf, levelPropertiesStartAddress + size * i, magic);
+            raf.seek(0xffffff & levelPropertiesStartAddress + (size * i));
+            raf.readFully(magic);
+            buffer = ByteBuffer.wrap(magic);
             LevelProperties levelProperties = new LevelProperties();
             levelProperties.setHp(buffer.getShort(0x0));
             levelProperties.setbAmmoStart(buffer.getShort(0x2));
@@ -99,43 +101,64 @@ public class BorgUtils {
     }
 
     public static int getLevelPropertiesStartAddress(int id) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        ByteBuffer buffer = Utils.seekRaf(raf,LEVEL_PROPERTIES_START_ADDRESS + group * 4, new byte[4]);
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[4];
+        raf.seek(LEVEL_PROPERTIES_START_ADDRESS + group * 4);
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
         int groupStartAddress = buffer.getInt();
         int size = 18;
         int levelCount = 20;
-        return groupStartAddress + (slot * size * levelCount);
+        return 0x80000000 | groupStartAddress + (slot *size * levelCount);
     }
 
     public static int getNo(int id) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        ByteBuffer buffer = Utils.seekRaf(raf,NO_START_ADDRESS + group * 4, new byte[4]);
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[4];
+        raf.seek(NO_START_ADDRESS + group * 4);
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
         int groupStartAddress = buffer.getInt();
-        buffer = Utils.seekRaf(raf, groupStartAddress + slot * 2, new byte[2]);
+        magic = new  byte[2];
+        raf.seek(0xffffff & groupStartAddress + slot * 2);
+        raf.readFully(magic);
+        buffer = ByteBuffer.wrap(magic);
         return buffer.getShort();
     }
 
     public static Tribe getTribe(int id) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        ByteBuffer buffer = Utils.seekRaf(raf,BORG_TRIBES_START_ADDRESS + group * 4, new byte[4]);
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[4];
+        raf.seek(BORG_TRIBES_START_ADDRESS + group * 4);
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
         int groupStartAddress = buffer.getInt();
-        buffer = Utils.seekRaf(raf, groupStartAddress + slot * 2, new byte[2]);
+        magic = new  byte[2];
+        raf.seek(0xffffff & groupStartAddress + slot * 2);
+        raf.readFully(magic);
+        buffer = ByteBuffer.wrap(magic);
         return Tribe.getTribe(buffer.getShort());
     }
 
     public static Map<BorgColor, BorgRarity> getRarities(int id) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        ByteBuffer buffer = Utils.seekRaf(raf,RARITY_START_ADDRESS + group * 4, new byte[4]);
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[4];
+        raf.seek(RARITY_START_ADDRESS + group * 4);
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
         int groupStartAddress = buffer.getInt();
-        buffer = Utils.seekRaf(raf, groupStartAddress + slot * 2 * 6, new byte[2 * 6]);
+        magic = new  byte[12];
+        raf.seek(0xffffff & groupStartAddress + slot * 2 * 6);
+        raf.readFully(magic);
+        buffer = ByteBuffer.wrap(magic);
         Map<BorgColor, BorgRarity> borgRarities = new HashMap<>();
         for (BorgColor borgColor : BorgColor.values()) {
             borgRarities.put(borgColor, BorgRarity.values()[buffer.getShort()]);
@@ -144,12 +167,18 @@ public class BorgUtils {
     }
 
     public static LevelRate getLevelRate(int id) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        ByteBuffer buffer = Utils.seekRaf(raf,LEVEL_RATE_START_ADDRESS + group * 4, new byte[4]);
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[4];
+        raf.seek(LEVEL_RATE_START_ADDRESS + group * 4);
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
         int groupStartAddress = buffer.getInt();
-        buffer = Utils.seekRaf(raf,groupStartAddress + slot, new byte[1]);
+        magic = new  byte[1];
+        raf.seek(0xffffff & groupStartAddress + slot);
+        raf.readFully(magic);
+        buffer = ByteBuffer.wrap(magic);
         return LevelRate.values()[buffer.get()];
     }
 
@@ -166,19 +195,27 @@ public class BorgUtils {
     }
 
     public static String getBorgName(int id, Language language) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        ByteBuffer buffer = Utils.seekRaf(raf,BORG_NAMES_START_ADDRESS + (group * 4) + (language.ordinal() * 0x10 * 4), new byte[4]);
-        final int groupStartAddress = buffer.getInt();
-        buffer = Utils.seekRaf(raf,groupStartAddress + slot * 4, new byte[4]);
-        int nameAddress = buffer.getInt();
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[4];
+        raf.seek(BORG_NAMES_START_ADDRESS + (group * 4) + (language.ordinal() * 0x10 * 4));
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
+        final int groupStartAddress = buffer.getInt(0);
+        raf.seek(0xffffff & groupStartAddress + slot * 4);
+        raf.readFully(magic);
+        int nameAddress = buffer.getInt(0);
+        magic = new byte[2];
+        raf.seek(0xffffff & nameAddress);
+        raf.readFully(magic);
+        buffer = ByteBuffer.wrap(magic);
         StringBuilder name = new StringBuilder();
-        while (true) {
-            buffer = Utils.seekRaf(raf,nameAddress, new byte[2]);
-            if (buffer.getShort(0) == 0) break;
+        while (buffer.getShort(0) != 0) {
             name.append(new String(buffer.array(), "Shift_JIS"));
             nameAddress += 2;
+            raf.seek(0xffffff & nameAddress);
+            raf.readFully(magic);
         }
         return name.toString();
     }
@@ -186,14 +223,22 @@ public class BorgUtils {
     public static int getDataCrystalCount(int id) throws IOException {
         int storyStartAddress = getStoryStartAddress(id);
         if (storyStartAddress == -1) return 0;
-        ByteBuffer buffer = Utils.seekRaf(storyStartAddress + 2, new byte[2]);
-        return buffer.getShort();
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[2];
+        raf.seek(0xffffff & storyStartAddress + 2);
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
+        return buffer.getShort(0);
     }
 
     public static Map<BorgColor, Integer> getGetValues(int id) throws IOException {
         int storyStartAddress = getStoryStartAddress(id);
         if (storyStartAddress == -1) return null;
-        ByteBuffer buffer = Utils.seekRaf(storyStartAddress + 4, new byte[12]);
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[12];
+        raf.seek(0xffffff & storyStartAddress + 4);
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
         Map<BorgColor, Integer> getValues = new HashMap<>();
         for (BorgColor borgColor : BorgColor.values()) {
             getValues.put(borgColor, (int) buffer.getShort());
@@ -204,14 +249,16 @@ public class BorgUtils {
     private static int getStoryStartAddress(int id) throws IOException {
         RandomAccessFile raf = Utils.getRaf();
         int storyStartAddress = STORY_VALUES_START_ADDRESS;
-        ByteBuffer buffer;
-        while (true) {
-            buffer = Utils.seekRaf(raf, storyStartAddress, new byte[2]);
-            if (buffer.getShort(0) == -1) return -1;
-            if (buffer.getShort(0) == id) break;
+        byte[] magic = new byte[2];
+        raf.seek(storyStartAddress);
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
+        while (id != buffer.getShort(0) && buffer.getShort(0) != -1) {
             storyStartAddress += 16;
+            raf.seek(0xffffff & storyStartAddress);
+            raf.readFully(magic);
         }
-        return storyStartAddress;
+        return 0x80000000 | storyStartAddress;
     }
 
     public static String getTribeNameEng(int id) throws IOException {
@@ -228,19 +275,27 @@ public class BorgUtils {
 
     //TODO: Refactor getName function into a generic function to be used between Tribes and Borgs.
     public static String getTribeName(int id, Language language) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
         int group = (0xf00 & id) >> 8;
         int slot = 0xff & id;
-        ByteBuffer buffer = Utils.seekRaf(raf,TRIBE_NAMES_START_ADDRESS + (group * 4) + (language.ordinal() * 0x10 * 4), new byte[4]);
-        final int groupStartAddress = buffer.getInt();
-        buffer = Utils.seekRaf(raf,groupStartAddress + slot * 4, new byte[4]);
-        int nameAddress = buffer.getInt();
+        RandomAccessFile raf = Utils.getRaf();
+        byte[] magic = new byte[4];
+        raf.seek(TRIBE_NAMES_START_ADDRESS + (group * 4) + (language.ordinal() * 0x10 * 4));
+        raf.readFully(magic);
+        ByteBuffer buffer = ByteBuffer.wrap(magic);
+        final int groupStartAddress = buffer.getInt(0);
+        raf.seek(0xffffff & groupStartAddress + slot * 4);
+        raf.readFully(magic);
+        int nameAddress = buffer.getInt(0);
+        magic = new byte[2];
+        raf.seek(0xffffff & nameAddress);
+        raf.readFully(magic);
+        buffer = ByteBuffer.wrap(magic);
         StringBuilder name = new StringBuilder();
-        while (true) {
-            buffer = Utils.seekRaf(raf,nameAddress, new byte[2]);
-            if (buffer.getShort(0) == 0) break;
+        while (buffer.getShort(0) != 0) {
             name.append(new String(buffer.array(), "Shift_JIS"));
             nameAddress += 2;
+            raf.seek(0xffffff & nameAddress);
+            raf.readFully(magic);
         }
         return name.toString();
     }
