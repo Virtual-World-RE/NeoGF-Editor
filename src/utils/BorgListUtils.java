@@ -26,25 +26,21 @@ public class BorgListUtils {
 
     // Returns an address containing an array of borg ids for a given index.
     private static int getBorgListAddress(int startAddress, int index) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
-        raf.seek((startAddress & 0xffffff) + index * 4);
-        byte[] magic = new byte[4];
-        raf.readFully(magic);
-        return ByteBuffer.wrap(magic).asIntBuffer().get();
+        return Utils.seekRaf(startAddress + index * 4, new byte[4]).asIntBuffer().get();
     }
 
     // Returns a list of borg species for a given start address.
     private static List<BorgSpecies> getBorgList(int startAddress) throws IOException {
         RandomAccessFile raf = Utils.getRaf();
-        raf.seek(startAddress & 0xffffff);
+        ByteBuffer byteBuffer;
+        byte[] magic = new byte[2];
         List<BorgSpecies> borgSpeciesList = new ArrayList<>();
         while (true) {
-            byte[] magic = new byte[2];
-            raf.readFully(magic);
-            ByteBuffer byteBuffer = ByteBuffer.wrap(magic);
+            byteBuffer = Utils.seekRaf(raf, startAddress, magic);
             int borgId = byteBuffer.getShort();
             if (borgId == -1) break;
             borgSpeciesList.add(BorgSpecies.getBorgSpecies(borgId));
+            startAddress += magic.length;
         }
         return borgSpeciesList;
     }

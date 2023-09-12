@@ -17,15 +17,6 @@ public class BattleBorgDetails {
     private static final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
-
-        List<BorgSpecies> borgSpeciesList = BorgSpecies.getAllBorgSpecies().values().stream().sorted(Comparator.comparing(BorgSpecies::getId)).collect(Collectors.toList());
-        for (BorgSpecies borgSpecies : borgSpeciesList) {
-//            System.out.println(String.format("%08x %08x", borgSpecies.getId()));
-            System.out.println(borgSpecies.getLevelRate().ordinal());
-        }
-//
-//        Borg borg = new Borg(BorgSpecies.getBorgSpecies(0x615));
-
         System.out.print("Please enter the Battle ID: ");
         BattleBorgDetails battleBorgDetails = new BattleBorgDetails();
         battleBorgDetails.printBorgCounts(Integer.parseInt(SCANNER.nextLine()));
