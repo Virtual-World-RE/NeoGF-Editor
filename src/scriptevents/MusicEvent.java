@@ -15,13 +15,17 @@ public class MusicEvent extends ScriptEvent {
     public Music getMusic() {
         return music;
     }
-
+    
     public void setMusic(Music music) {
         this.music = music;
     }
 
     @Override
     public ByteBuffer getAsBytes() {
-        return super.getAsBytes();
+        ByteBuffer buffer = super.getAsBytes();
+        buffer.put(0xa, ((byte) 0x72));
+        buffer.put(0xb, (byte) getMusic().ordinal());
+
+        return buffer;
     }
 }
