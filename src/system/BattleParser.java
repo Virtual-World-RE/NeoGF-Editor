@@ -20,10 +20,6 @@ public class BattleParser {
 
     public static void main(String[] args) throws IOException {
         BattleParser main = new BattleParser();
-
-//        StoryUtils.readBattleScript(StoryUtils.getBattleScriptAddresses(0x17).get(2));
-        BorgUtils.getColors(0xf07);
-
 //        for (BorgSpeciesThing borgSpeciesThing : main.borgSpeciesMap.values()) {
 //            int id = Integer.parseInt(borgSpeciesThing.getId(), 16);
 //            int number = borgSpeciesThing.getNo();
