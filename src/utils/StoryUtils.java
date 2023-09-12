@@ -131,7 +131,7 @@ public class StoryUtils {
         return Utils.seekRaf(BATTLE_SCRIPTS_START_ADDRESS + battle * 16, new byte[16]).asIntBuffer();
     }
 
-    // Returns an List of ScriptEvents for a given script address.
+    // Returns a List of ScriptEvents for a given script address.
     public static List<ScriptEvent> readBattleScript(int startAddress) throws IOException {
         RandomAccessFile raf = Utils.getRaf();
         List<ScriptEvent> scriptEvents = new ArrayList<>();

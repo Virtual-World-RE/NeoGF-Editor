@@ -36,8 +36,8 @@ public class Utils {
 //    }
 
     public static RandomAccessFile getRaf() throws FileNotFoundException {
-//        File file = new File(Utils.class.getClassLoader().getResource("mem1.raw").getPath());
-        File file = new File(Utils.class.getClassLoader().getResource("boot.dol").getPath());
+        //File file = new File(Utils.class.getClassLoader().getResource("boot.dol").getPath());
+        File file = new File(System.getProperty("."), "resources/boot.dol");
         return new RandomAccessFile(file, "rw");
     }
 
