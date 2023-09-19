@@ -7,7 +7,7 @@ import java.nio.IntBuffer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.crystalpixel.neogfutils.scriptevents.SpawnEvent;
+import com.crystalpixel.neogfutils.event.SpawnEvent;
 import com.crystalpixel.neogfutils.utils.Utils;
 import com.crystalpixel.neogfutils.utils.borg.BorgListUtils;
 import com.crystalpixel.neogfutils.utils.story.StoryUtils;

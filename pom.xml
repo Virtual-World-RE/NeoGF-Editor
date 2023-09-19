@@ -8,13 +8,14 @@
     <artifactId>GotchaForceUtilities</artifactId>
     <version>1.0-SNAPSHOT</version>
     <build>
+        <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -32,6 +33,7 @@
             <artifactId>miglayout</artifactId>
             <version>3.7.4</version>
         </dependency>
+
 
 <!--        <dependency>-->
 <!--            <groupId>org.slf4j</groupId>-->

@@ -1,10 +1,10 @@
-package com.crystalpixel.neogfutils.scriptevents;
+package com.crystalpixel.neogfutils.event;
 
 import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.system.BorgSpecies;
 
-public class FocusEvent extends ScriptEvent {
+public class FocusEvent extends Event {
 
     private BorgSpecies borgSpecies;
     private boolean pause;

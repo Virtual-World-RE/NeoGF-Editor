@@ -13,8 +13,8 @@ import java.util.List;
 import com.crystalpixel.neogfutils.battle.Commander;
 import com.crystalpixel.neogfutils.battle.MapLocation;
 import com.crystalpixel.neogfutils.battle.Opponent;
+import com.crystalpixel.neogfutils.event.*;
 import com.crystalpixel.neogfutils.game.*;
-import com.crystalpixel.neogfutils.scriptevents.*;
 import com.crystalpixel.neogfutils.system.BattleConfiguration;
 import com.crystalpixel.neogfutils.system.BorgSpecies;
 import com.crystalpixel.neogfutils.utils.Utils;
@@ -138,9 +138,9 @@ public class StoryUtils {
     }
 
     // Returns a List of ScriptEvents for a given script address.
-    public static List<ScriptEvent> readBattleScript(int startAddress) throws IOException {
+    public static List<Event> readBattleScript(int startAddress) throws IOException {
         RandomAccessFile raf = Utils.getRaf();
-        List<ScriptEvent> scriptEvents = new ArrayList<>();
+        List<Event> scriptEvents = new ArrayList<>();
         byte[] magic = new byte[32];
 
         while (true) {
@@ -152,7 +152,7 @@ public class StoryUtils {
             int slot2 = byteBuffer.getShort(0x6) & 0xffff;
             int eventType = byteBuffer.get(0xa) & 0xff;
             startAddress += magic.length;
-            ScriptEvent scriptEvent;
+            Event scriptEvent;
             switch (eventType) {
                 case 0x70:
                 case 0x71: continue;

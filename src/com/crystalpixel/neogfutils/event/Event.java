@@ -1,15 +1,15 @@
-package com.crystalpixel.neogfutils.scriptevents;
+package com.crystalpixel.neogfutils.event;
 
 import java.nio.ByteBuffer;
 
-public abstract class ScriptEvent {
+public abstract class Event {
 
     private int timer1;
     private int timer2;
     private int slot1;
     private int slot2;
 
-    public ScriptEvent(int timer1, int timer2, int slot1, int slot2) {
+    public Event(int timer1, int timer2, int slot1, int slot2) {
         this.timer1 = timer1;
         this.timer2 = timer2;
         this.slot1 = slot1;

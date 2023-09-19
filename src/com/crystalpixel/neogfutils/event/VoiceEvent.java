@@ -1,10 +1,10 @@
-package com.crystalpixel.neogfutils.scriptevents;
+package com.crystalpixel.neogfutils.event;
 
 import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.battle.Commander;
 
-public class VoiceEvent extends ScriptEvent {
+public class VoiceEvent extends Event {
 
     private Commander commander;
     private boolean mute;

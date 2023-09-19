@@ -13,7 +13,7 @@ public class Battle {
     private int playerEntrance;
     private int allyEntrance;
     private int timer;
-    private int battleOptions;
+    private BattleOptions[] battleOptions;
     private int allyScore;
     private int enemyScore;
     private int allyHandicap;
@@ -21,13 +21,18 @@ public class Battle {
     private int music;
 
     public Battle(Point3D playerCoordinates, Point3D allyCoordinates, int playerEntrance, int allyEntrance, int timer,
-            int battleOptions, int allyScore, int enemyScore, int allyHandicap, int enemyHandicap, int music) {
+            BattleOptions[] enabledOptions, int allyScore, int enemyScore, int allyHandicap, int enemyHandicap, int music) {
         this.playerCoordinates = playerCoordinates;
         this.allyCoordinates = allyCoordinates;
         this.playerEntrance = playerEntrance;
         this.allyEntrance = allyEntrance;
         this.timer = timer;
-        this.battleOptions = battleOptions;
+        this.battleOptions = enabledOptions;
+
+        for (BattleOptions option : enabledOptions) {
+            battleOptions.(option);
+        }
+
         this.allyScore = allyScore;
         this.enemyScore = enemyScore;
         this.allyHandicap = allyHandicap;
@@ -81,14 +86,6 @@ public class Battle {
 
     public void setTimer(int timer) {
         this.timer = timer;
-    }
-
-    public int getBattleOptions() {
-        return battleOptions;
-    }
-
-    public void setBattleOptions(int battleOptions) {
-        this.battleOptions = battleOptions;
     }
 
     public int getAllyScore() {

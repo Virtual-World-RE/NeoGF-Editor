@@ -1,4 +1,4 @@
-package com.crystalpixel.neogfutils.scriptevents;
+package com.crystalpixel.neogfutils.event;
 
 import javafx.geometry.Point3D;
 
@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.battle.Commander;
 
-public class SpawnEvent extends ScriptEvent {
+public class SpawnEvent extends Event {
 
     private int id;
     private int level;

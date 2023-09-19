@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 import com.crystalpixel.neogfutils.battle.Commander;
 import com.crystalpixel.neogfutils.borg.Borg;
 import com.crystalpixel.neogfutils.borg.BorgLevelStats;
-import com.crystalpixel.neogfutils.scriptevents.*;
-import com.crystalpixel.neogfutils.scriptevents.cutsceneevents.*;
+import com.crystalpixel.neogfutils.event.*;
+import com.crystalpixel.neogfutils.event.cutscene.*;
 import com.crystalpixel.neogfutils.utils.Utils;
 import com.crystalpixel.neogfutils.utils.borg.BorgUtils;
 import com.crystalpixel.neogfutils.utils.story.StoryUtils;
@@ -102,8 +102,8 @@ public class BattleParser {
 //        }
     }
 
-    private List<ScriptEvent> getCustomBattleScript() {
-        List<ScriptEvent> scriptEvents = new ArrayList<>();
+    private List<Event> getCustomBattleScript() {
+        List<Event> scriptEvents = new ArrayList<>();
         VoiceEvent voiceEvent = new VoiceEvent(0, 0, 5, 5);
         voiceEvent.setMute(true);
         scriptEvents.add(voiceEvent);
@@ -144,8 +144,8 @@ public class BattleParser {
         }
     }
 
-    private void makeBattleScriptCode(int startAddress, List<ScriptEvent> scriptEvents) {
-        for (ScriptEvent scriptEvent : scriptEvents) {
+    private void makeBattleScriptCode(int startAddress, List<Event> scriptEvents) {
+        for (Event scriptEvent : scriptEvents) {
             ByteBuffer scriptBytes = scriptEvent.getAsBytes();
             while (scriptBytes.hasRemaining()) {
                 int codeLine1 = (0x00FFFFFF & startAddress) | 0x04000000;

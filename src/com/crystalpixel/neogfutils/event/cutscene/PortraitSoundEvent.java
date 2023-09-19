@@ -1,4 +1,4 @@
-package com.crystalpixel.neogfutils.scriptevents.cutsceneevents;
+package com.crystalpixel.neogfutils.event.cutscene;
 
 import java.nio.ByteBuffer;
 

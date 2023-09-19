@@ -1,6 +1,6 @@
-package com.crystalpixel.neogfutils.scriptevents.cutsceneevents;
+package com.crystalpixel.neogfutils.game;
 
-public enum CutsceneEventType {
+public enum CutsceneType {
 
     INPUT_NAME(0),
     DISPLAY_ART(1),
@@ -32,7 +32,7 @@ public enum CutsceneEventType {
 
     private int params;
 
-    CutsceneEventType(int params) {
+    CutsceneType(int params) {
         this.params = params;
     }
 
