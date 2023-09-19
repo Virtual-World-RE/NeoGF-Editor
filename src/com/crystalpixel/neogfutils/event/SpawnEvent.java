@@ -6,13 +6,17 @@ import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.battle.Commander;
 
+<<<<<<< HEAD:src/com/crystalpixel/neogfutils/event/SpawnEvent.java
 public class SpawnEvent extends Event {
+=======
+public class SpawnEvent extends MissionEvent {
+>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69:src/com/crystalpixel/neogfutils/scriptevents/SpawnEvent.java
 
     private int id;
     private int level;
     private Commander commander;
     private int voiceListIndex;
-    private int activeness;
+    private int difficulty;
     private int stationary;
     private int intelligence;
     private boolean channelBoolean;
@@ -57,12 +61,12 @@ public class SpawnEvent extends Event {
         this.voiceListIndex = voiceListIndex;
     }
 
-    public int getActiveness() {
-        return activeness;
+    public int getDifficulty() {
+        return difficulty;
     }
 
-    public void setActiveness(int activeness) {
-        this.activeness = activeness;
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
 
     public int getStationary() {
@@ -127,7 +131,7 @@ public class SpawnEvent extends Event {
         buffer.putShort(0x8, (short) getId());
         buffer.put(0xa, (byte) getLevel());
         buffer.put(0xb, (byte) getCommander().ordinal());
-        buffer.put(0xc, (byte) (getActiveness() | getVoiceListIndex() << 4));
+        buffer.put(0xc, (byte) (getDifficulty() | getVoiceListIndex() << 4));
         buffer.put(0xd, (byte) getStationary());
         buffer.put(0xe, (byte) getIntelligence());
         buffer.put(0xf, (byte) (isChannelBoolean() ? 1 : 0));

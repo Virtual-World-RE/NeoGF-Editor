@@ -32,7 +32,7 @@ public class StoryUtils {
         Opponent opponent = new Opponent(
             Commander.get(buffer.get(0)),
             buffer.get(0x1),
-            buffer.get(0x2) & 0xFF,
+                buffer.get(0x2) & 0xFF,
             buffer.get(0x3) & 0xFF,
             new Point3D(buffer.getFloat(0x4), buffer.getFloat(0x8), buffer.getFloat(0xC)),
             buffer.get(0x10) & 0xFF
@@ -71,31 +71,31 @@ public class StoryUtils {
         return Utils.seekRaf(BATTLE_ADDRESSES_START_ADDRESS + battle * 28, new byte[28]).asIntBuffer();
     }
 
-    private static int getStoryBattleConfigurationAddress(int battle) throws IOException {
+    public static int getStoryBattleConfigurationAddress(int battle) throws IOException {
         return getStoryBattleAddresses(battle).get(0);
     }
 
-    private static int getStoryBattleAllyBorgListOverride(int battle) throws IOException {
+    public static int getStoryBattleAllyBorgListOverride(int battle) throws IOException {
         return getStoryBattleAddresses(battle).get(1);
     }
 
-    private static int getStoryBattleUnlockAddress(int battle) throws IOException {
+    public static int getStoryBattleUnlockAddress(int battle) throws IOException {
         return getStoryBattleAddresses(battle).get(2);
     }
 
-    private static int getStoryBattleUnlistAddress(int battle) throws IOException {
+    public static int getStoryBattleUnlistAddress(int battle) throws IOException {
         return getStoryBattleAddresses(battle).get(3);
     }
 
-    private static int getStoryBattleBeforeCutsceneAddress(int battle) throws IOException {
+    public static int getStoryBattleBeforeCutsceneAddress(int battle) throws IOException {
         return getStoryBattleAddresses(battle).get(4);
     }
 
-    private static int getStoryBattleWinCutsceneAddress(int battle) throws IOException {
+    public static int getStoryBattleWinCutsceneAddress(int battle) throws IOException {
         return getStoryBattleAddresses(battle).get(5);
     }
 
-    private static int getStoryBattleLoseCutsceneAddress(int battle) throws IOException {
+    public static int getStoryBattleLoseCutsceneAddress(int battle) throws IOException {
         return getStoryBattleAddresses(battle).get(6);
     }
 
@@ -138,9 +138,15 @@ public class StoryUtils {
     }
 
     // Returns a List of ScriptEvents for a given script address.
+<<<<<<< HEAD
     public static List<Event> readBattleScript(int startAddress) throws IOException {
         RandomAccessFile raf = Utils.getRaf();
         List<Event> scriptEvents = new ArrayList<>();
+=======
+    public static List<MissionEvent> readBattleScript(int startAddress) throws IOException {
+        RandomAccessFile raf = Utils.getRaf();
+        List<MissionEvent> missionEvents = new ArrayList<>();
+>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69
         byte[] magic = new byte[32];
 
         while (true) {
@@ -152,14 +158,18 @@ public class StoryUtils {
             int slot2 = byteBuffer.getShort(0x6) & 0xffff;
             int eventType = byteBuffer.get(0xa) & 0xff;
             startAddress += magic.length;
+<<<<<<< HEAD
             Event scriptEvent;
+=======
+            MissionEvent missionEvent;
+>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69
             switch (eventType) {
                 case 0x70:
                 case 0x71: continue;
                 case 0x72: {
                     Music music = Music.get(byteBuffer.get(0xb));
-                    scriptEvent = new MusicEvent(timer1, timer2, slot1, slot2);
-                    ((MusicEvent) scriptEvent).setMusic(music);
+                    missionEvent = new MusicEvent(timer1, timer2, slot1, slot2);
+                    ((MusicEvent) missionEvent).setMusic(music);
                     break;
                 }
                 case 0x73: {
@@ -168,12 +178,12 @@ public class StoryUtils {
                     int joint = byteBuffer.get(0x10);
                     float distance = byteBuffer.getFloat(0x14);
                     float duration = byteBuffer.getFloat(0x18);
-                    scriptEvent = new FocusEvent(timer1, timer2, slot1, slot2);
-                    ((FocusEvent) scriptEvent).setBorgSpecies(borgSpecies);
-                    ((FocusEvent) scriptEvent).setPause(pause);
-                    ((FocusEvent) scriptEvent).setJoint(joint);
-                    ((FocusEvent) scriptEvent).setDistance(distance);
-                    ((FocusEvent) scriptEvent).setDuration(duration);
+                    missionEvent = new FocusEvent(timer1, timer2, slot1, slot2);
+                    ((FocusEvent) missionEvent).setBorgSpecies(borgSpecies);
+                    ((FocusEvent) missionEvent).setPause(pause);
+                    ((FocusEvent) missionEvent).setJoint(joint);
+                    ((FocusEvent) missionEvent).setDistance(distance);
+                    ((FocusEvent) missionEvent).setDuration(duration);
                     break;
                 }
                 case 0x74: {
@@ -181,27 +191,27 @@ public class StoryUtils {
                     int voice = byteBuffer.get(0xc) & 0xff;
                     boolean visible = byteBuffer.get(0xd) == 1;
                     boolean queue = byteBuffer.get(0xe) == 1;
-                    scriptEvent = new SpeechEvent(timer1, timer2, slot1, slot2);
-                    ((SpeechEvent) scriptEvent).setCommander(commander);
-                    ((SpeechEvent) scriptEvent).setSound(voice);
-                    ((SpeechEvent) scriptEvent).setVisible(visible);
-                    ((SpeechEvent) scriptEvent).setQueue(queue);
+                    missionEvent = new SpeechEvent(timer1, timer2, slot1, slot2);
+                    ((SpeechEvent) missionEvent).setCommander(commander);
+                    ((SpeechEvent) missionEvent).setSound(voice);
+                    ((SpeechEvent) missionEvent).setVisible(visible);
+                    ((SpeechEvent) missionEvent).setQueue(queue);
                     break;
                 }
                 case 0x75:
                 case 0x76: {
                     Commander commander = Commander.get(byteBuffer.get(0xb) & 0xff);
                     boolean mute = eventType == 0x76;
-                    scriptEvent = new VoiceEvent(timer1, timer2, slot1, slot2);
-                    ((VoiceEvent) scriptEvent).setCommander(commander);
-                    ((VoiceEvent) scriptEvent).setMute(mute);
+                    missionEvent = new VoiceEvent(timer1, timer2, slot1, slot2);
+                    ((VoiceEvent) missionEvent).setCommander(commander);
+                    ((VoiceEvent) missionEvent).setMute(mute);
                     break;
                 }
                 default: {
                     int id = byteBuffer.getShort(0x8) & 0xffff;
                     Commander commander = Commander.get(byteBuffer.get(0xb) & 0xff);
                     int voiceListIndex = byteBuffer.get(0xc) >> 4;
-                    int activeness = byteBuffer.get(0xc) & 0xf;
+                    int difficulty = byteBuffer.get(0xc) & 0xf;
                     int stationary = byteBuffer.get(0xd) & 0xff;
                     int intelligence = byteBuffer.get(0xe) & 0xff;
                     boolean channel = byteBuffer.get(0xf) == 1;
@@ -211,24 +221,24 @@ public class StoryUtils {
                     float x = byteBuffer.getFloat(0x14);
                     float y = byteBuffer.getFloat(0x18);
                     float z = byteBuffer.getFloat(0x1c);
-                    scriptEvent = new SpawnEvent(timer1, timer2, slot1, slot2);
-                    ((SpawnEvent) scriptEvent).setId(id);
-                    ((SpawnEvent) scriptEvent).setLevel(eventType);
-                    ((SpawnEvent) scriptEvent).setCommander(commander);
-                    ((SpawnEvent) scriptEvent).setVoiceListIndex(voiceListIndex);
-                    ((SpawnEvent) scriptEvent).setActiveness(activeness);
-                    ((SpawnEvent) scriptEvent).setStationary(stationary);
-                    ((SpawnEvent) scriptEvent).setIntelligence(intelligence);
-                    ((SpawnEvent) scriptEvent).setChannelBoolean(channel);
-                    ((SpawnEvent) scriptEvent).setBoss(boss);
-                    ((SpawnEvent) scriptEvent).setRotation(rotation);
-                    ((SpawnEvent) scriptEvent).setEntrance(entrance);
-                    ((SpawnEvent) scriptEvent).setPosition(new Point3D(x, y, z));
+                    missionEvent = new SpawnEvent(timer1, timer2, slot1, slot2);
+                    ((SpawnEvent) missionEvent).setId(id);
+                    ((SpawnEvent) missionEvent).setLevel(eventType);
+                    ((SpawnEvent) missionEvent).setCommander(commander);
+                    ((SpawnEvent) missionEvent).setVoiceListIndex(voiceListIndex);
+                    ((SpawnEvent) missionEvent).setDifficulty(difficulty);
+                    ((SpawnEvent) missionEvent).setStationary(stationary);
+                    ((SpawnEvent) missionEvent).setIntelligence(intelligence);
+                    ((SpawnEvent) missionEvent).setChannelBoolean(channel);
+                    ((SpawnEvent) missionEvent).setBoss(boss);
+                    ((SpawnEvent) missionEvent).setRotation(rotation);
+                    ((SpawnEvent) missionEvent).setEntrance(entrance);
+                    ((SpawnEvent) missionEvent).setPosition(new Point3D(x, y, z));
                 }
             }
-            scriptEvents.add(scriptEvent);
+            missionEvents.add(missionEvent);
         }
-        return scriptEvents;
+        return missionEvents;
     }
 
     public static void addStory(int index, int configurationAddress, List<Integer> scriptAddresses) throws IOException {

@@ -4,7 +4,11 @@ import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.battle.Commander;
 
+<<<<<<< HEAD:src/com/crystalpixel/neogfutils/event/SpeechEvent.java
 public class SpeechEvent extends Event {
+=======
+public class SpeechEvent extends MissionEvent {
+>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69:src/com/crystalpixel/neogfutils/scriptevents/SpeechEvent.java
 
     private Commander commander;
     private int sound;

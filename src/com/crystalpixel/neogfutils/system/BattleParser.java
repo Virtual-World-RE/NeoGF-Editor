@@ -5,22 +5,32 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.crystalpixel.neogfutils.battle.Commander;
-import com.crystalpixel.neogfutils.borg.Borg;
 import com.crystalpixel.neogfutils.borg.BorgLevelStats;
 import com.crystalpixel.neogfutils.event.*;
 import com.crystalpixel.neogfutils.event.cutscene.*;
 import com.crystalpixel.neogfutils.utils.Utils;
 import com.crystalpixel.neogfutils.utils.borg.BorgUtils;
-import com.crystalpixel.neogfutils.utils.story.StoryUtils;
 
 public class BattleParser {
 
     public static void main(String[] args) throws IOException {
         BattleParser main = new BattleParser();
-        BorgUtils.getColors(0xf07);
+        BorgUtils.getBorgLevelStats(0x908);
+//        int missionIndex = 117;
+//        System.out.println("Battle " + missionIndex + ": " + StoryUtils.getMissionStringIdentifiers(StoryUtils.getStoryBattleConfigurationAddress(missionIndex)));
+//        System.out.println("Unlock Conditions:");
+//        List<Condition> conditionList = main.readConditions(StoryUtils.getStoryBattleUnlockAddress(missionIndex), true);
+//        for (Condition condition : conditionList) {
+//            System.out.println("- " + condition.toString());
+//        }
+//        System.out.println("\nUnlist Conditions:");
+//        conditionList = main.readConditions(StoryUtils.getStoryBattleUnlistAddress(missionIndex), false);
+//        for (Condition condition : conditionList) {
+//            System.out.println("- " + condition.toString());
+//        }
+
 //        for (BorgSpeciesThing borgSpeciesThing : main.borgSpeciesMap.values()) {
 //            int id = Integer.parseInt(borgSpeciesThing.getId(), 16);
 //            int number = borgSpeciesThing.getNo();
@@ -32,18 +42,7 @@ public class BattleParser {
 
 //        for (int i = 0; i < 200; i++) {
         int i = 76;
-        Borg borg = new Borg(BorgSpecies.getBorgSpecies(6));
-        BorgUtils.getTribeNameEng(0);
-        main.readInternal(main.getInternalAddress(2));
-        StoryUtils.readBattleConfiguration(StoryUtils.getBattleConfigurationAddress(10));
         BorgUtils.getBorgLevelStats(0x000);
-        BorgSpecies.getAllBorgSpecies().values().stream().filter(s -> {
-            try {
-                return s.getDataCrystalCount() == 4;
-            } catch (IOException e) {
-                return false;
-            }
-        }).collect(Collectors.toSet());
 //        main.makeHpBorgLevelStatsCode(BorgUtils.getBorgLevelStatsStartAddress(0xa09), 310, 5);
 //        main.makeAmmoBorgLevelStatsCode(BorgUtils.getBorgLevelStatsStartAddress(0xa09), 240);
         BorgLevelStats[] BorgLevelStats = BorgUtils.getBorgLevelStats(0x609);
@@ -62,60 +61,27 @@ public class BattleParser {
 //        main.makeAmmoBorgLevelStatsCode(BorgUtils.getBorgLevelStatsStartAddress(0x61d), BorgLevelStats);
 
         main.makeShiftCode(0x8039717e, 4, 0xec);
-
-        System.out.println("Battle Index: " + i);
-//        IntBuffer surfaceAddresses = main.getSurfaceAddresses(i);
-//        main.readSurface(surfaceAddresses.get(0));
-//        main.getCutsceneScript(surfaceAddresses.get(5)).forEach(System.out::println);
-//        List<Condition> conditionList = main.readUnlock(surfaceAddresses.get(2));
-//        if (!conditionList.isEmpty()) System.out.println("\nUnlock Conditions:\n");
-//        conditionList.forEach(System.out::println);
-//        conditionList.forEach(condition -> {
-//            if (condition.getType() > 1 && condition.getType() < 7) {
-//                List<String> strings = null;
-//                try {
-//                    strings = Utils.getMissionStringIdentifiersByIndex(condition.getParameters().get(0));
-//                }
-//                catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                System.out.println(String.format("\nBattle %s:", condition.getParameters().get(0)));
-//                System.out.println(String.format("Map Location: %s", strings.get(1)));
-//                System.out.println(String.format("Battle Name: %s", strings.get(0)));
-//            }
-//        });
-//        int c = 0;
-//        List<Integer> addressList = main.readConditionAddresses(0x80359fcc);
-//        while (c < addressList.size()) {
-//            System.out.println(Utils.getAsHexString(c) + ": " + Utils.getAsHexString(addressList.get(c++)));
-//        }
-//        while (surfaceAddresses.hasRemaining()) {
-//            System.out.println(Utils.getAsHexString(surfaceAddresses.get()));
-//        }
-//        main.readInternal(main.getInternalAddress(i));
-//        System.out.println("\"" + main.readText(main.getTextAddress(i)) + "\"");
-//        List<ScriptEvent> scriptEvents = main.readScript(main.getScriptAddresses(i).get(1));
-//        System.out.println(scriptEvents.isEmpty());
-//        main.makeBattleScriptCode(main.getScriptAddresses(3).get(0) + 0x60, main.getCustomBattleScript());
-//        System.out.println("==============================");
-//        main.makeCutsceneScriptCode(main.getSurfaceAddresses(2).get(4), main.getCustomCutsceneScript());
-//        }
     }
 
+<<<<<<< HEAD
     private List<Event> getCustomBattleScript() {
         List<Event> scriptEvents = new ArrayList<>();
+=======
+    private List<MissionEvent> getCustomBattleScript() {
+        List<MissionEvent> missionEvents = new ArrayList<>();
+>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69
         VoiceEvent voiceEvent = new VoiceEvent(0, 0, 5, 5);
         voiceEvent.setMute(true);
-        scriptEvents.add(voiceEvent);
+        missionEvents.add(voiceEvent);
         for (int i = 0; i < 200; i++) {
             SpeechEvent speechEvent = new SpeechEvent(0, 0, 5, 5);
             speechEvent.setQueue(true);
             speechEvent.setVisible(true);
             speechEvent.setSound(i);
             speechEvent.setCommander(Commander.MANA);
-            scriptEvents.add(speechEvent);
+            missionEvents.add(speechEvent);
         }
-        return scriptEvents;
+        return missionEvents;
     }
 
     private void makeShiftCode(int startAddress, int offset, int size) throws IOException {
@@ -144,9 +110,15 @@ public class BattleParser {
         }
     }
 
+<<<<<<< HEAD
     private void makeBattleScriptCode(int startAddress, List<Event> scriptEvents) {
         for (Event scriptEvent : scriptEvents) {
             ByteBuffer scriptBytes = scriptEvent.getAsBytes();
+=======
+    private void makeBattleScriptCode(int startAddress, List<MissionEvent> missionEvents) {
+        for (MissionEvent missionEvent : missionEvents) {
+            ByteBuffer scriptBytes = ByteBuffer.wrap(missionEvent.getAsBytes());
+>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69
             while (scriptBytes.hasRemaining()) {
                 int codeLine1 = (0x00FFFFFF & startAddress) | 0x04000000;
                 int codeLine2 = scriptBytes.getInt();
@@ -202,45 +174,28 @@ public class BattleParser {
         }
     }
 
-    private List<Condition> readUnlock(int startAddress) throws IOException {
-        File file = new File(getClass().getClassLoader().getResource("mem1.raw").getPath());
-        RandomAccessFile raf = new RandomAccessFile(file, "rw");
-        raf.seek(startAddress & 0x00FFFFFF);
+    //TODO: make this less bad.
+    private List<Condition> readConditions(int startAddress, boolean unlock) throws IOException {
+        ByteBuffer byteBuffer;
         List<Condition> conditionList = new ArrayList<>();
-        conditionLoop:
         while (true) {
-            byte[] magic = new byte[2];
-            raf.readFully(magic);
-            ByteBuffer byteBuffer = ByteBuffer.wrap(magic);
-            int conditionType = byteBuffer.getShort() & 0xFF;
+            byteBuffer = Utils.seekRaf(startAddress, new byte[2]);
+            int parameterCount = byteBuffer.get() & 0xFF;
+            int conditionType = byteBuffer.get() & 0xFF;
+            startAddress += 2;
+            if (conditionType == 0x2e) break;
             List<Integer> parameterList = new ArrayList<>();
-            switch (conditionType) {
-                case 0x0:
-                case 0x1:
-                case 0x9:
-                case 0xA:
-                    byte[] paramMagic = new byte[4];
-                    raf.readFully(paramMagic);
-                    ByteBuffer paramBuffer = ByteBuffer.wrap(paramMagic);
-                    parameterList.add(paramBuffer.getShort() & 0xFFFF);
-                    parameterList.add(paramBuffer.getShort() & 0xFFFF); break;
-                case 0x2:
-                case 0x3:
-                case 0x4:
-                case 0x5:
-                case 0x6:
-                case 0x7:
-                case 0x8:
-                case 0xC:
-                case 0xD:
-                case 0x11:
-                case 0x12:
-                    raf.readFully(magic);
-                    parameterList.add(ByteBuffer.wrap(magic).getShort() & 0xFFFF); break;
-                case 0x13: break;
-                default: break conditionLoop;
+            for (int i = 0; i < parameterCount; i++) {
+                byteBuffer = Utils.seekRaf(startAddress, new byte[2]);
+                parameterList.add(byteBuffer.getShort() & 0xffff);
+                startAddress += 2;
             }
-            conditionList.add(new Condition(conditionType, parameterList));
+            if (unlock) {
+                conditionList.add(new UnlockCondition(conditionType, parameterList));
+            }
+            else {
+                conditionList.add(new UnlistCondition(conditionType, parameterList));
+            }
         }
         return conditionList;
     }
@@ -296,46 +251,5 @@ public class BattleParser {
             typeList.add(Utils.getAsHexString(type));
         }
         return new LinkedHashSet<>(typeList);
-    }
-
-    // Returns an IntBuffer of four words, each representing a script's address.
-    private int getInternalAddress(int battle) throws IOException {
-        File file = new File(getClass().getClassLoader().getResource("mem1.raw").getPath());
-        RandomAccessFile raf = new RandomAccessFile(file, "rw");
-        raf.seek(0x3864C8 + battle * 4);
-        byte[] magic = new byte[4];
-        raf.readFully(magic);
-        return ByteBuffer.wrap(magic).asIntBuffer().get();
-    }
-
-    private void readInternal(int startAddress) throws IOException {
-        File file = new File(getClass().getClassLoader().getResource("mem1.raw").getPath());
-        RandomAccessFile raf = new RandomAccessFile(file, "rw");
-        raf.seek(startAddress & 0x00FFFFFF);
-        byte[] magic = new byte[48];
-        raf.readFully(magic);
-        ByteBuffer byteBuffer = ByteBuffer.wrap(magic);
-        for (int i = 1; i <= 5; i++) {
-            int opponent = byteBuffer.getShort() & 0xFFFF;
-            if (opponent == 0xFFFF) continue;
-            StoryUtils.getOpponent(opponent).getDetails(true);
-//            System.out.println(String.format("\nOpponent %s: {", i));
-//
-//            System.out.println("}");
-        }
-    }
-
-    private List<Integer> readConditionAddresses(int startAddress) throws IOException {
-        File file = new File(getClass().getClassLoader().getResource("mem1.raw").getPath());
-        RandomAccessFile raf = new RandomAccessFile(file, "rw");
-        raf.seek(startAddress & 0x00FFFFFF);
-        List<Integer> conditions = new ArrayList<>();
-        for (int i = 0; i <= 46; i++) {
-            byte[] magic = new byte[4];
-            raf.readFully(magic);
-            ByteBuffer byteBuffer = ByteBuffer.wrap(magic);
-            conditions.add(byteBuffer.getInt());
-        }
-        return conditions;
     }
 }

@@ -4,7 +4,11 @@ import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.game.Music;
 
+<<<<<<< HEAD:src/com/crystalpixel/neogfutils/event/MusicEvent.java
 public class MusicEvent extends Event {
+=======
+public class MusicEvent extends MissionEvent {
+>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69:src/com/crystalpixel/neogfutils/scriptevents/MusicEvent.java
 
     private Music music;
 

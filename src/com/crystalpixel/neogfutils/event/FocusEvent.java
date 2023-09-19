@@ -4,7 +4,11 @@ import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.system.BorgSpecies;
 
+<<<<<<< HEAD:src/com/crystalpixel/neogfutils/event/FocusEvent.java
 public class FocusEvent extends Event {
+=======
+public class FocusEvent extends MissionEvent {
+>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69:src/com/crystalpixel/neogfutils/scriptevents/FocusEvent.java
 
     private BorgSpecies borgSpecies;
     private boolean pause;
