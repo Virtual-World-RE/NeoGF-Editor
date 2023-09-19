@@ -137,16 +137,9 @@ public class StoryUtils {
         return Utils.seekRaf(BATTLE_SCRIPTS_START_ADDRESS + battle * 16, new byte[16]).asIntBuffer();
     }
 
-    // Returns a List of ScriptEvents for a given script address.
-<<<<<<< HEAD
-    public static List<Event> readBattleScript(int startAddress) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
-        List<Event> scriptEvents = new ArrayList<>();
-=======
     public static List<MissionEvent> readBattleScript(int startAddress) throws IOException {
         RandomAccessFile raf = Utils.getRaf();
         List<MissionEvent> missionEvents = new ArrayList<>();
->>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69
         byte[] magic = new byte[32];
 
         while (true) {
@@ -158,11 +151,7 @@ public class StoryUtils {
             int slot2 = byteBuffer.getShort(0x6) & 0xffff;
             int eventType = byteBuffer.get(0xa) & 0xff;
             startAddress += magic.length;
-<<<<<<< HEAD
-            Event scriptEvent;
-=======
             MissionEvent missionEvent;
->>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69
             switch (eventType) {
                 case 0x70:
                 case 0x71: continue;

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.crystalpixel.neogfutils.event.MissionEvent;
 
-public class MissionScript implements Exportable {
+public class MissionScript implements Serializable {
 
     List<MissionEvent> missionEvents;
     int eventRepeatCount;
