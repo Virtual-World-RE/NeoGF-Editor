@@ -121,8 +121,8 @@ public class SpawnEvent extends MissionEvent {
     }
 
     @Override
-    public ByteBuffer getAsBytes() {
-        ByteBuffer buffer = super.getAsBytes();
+    public byte[] getAsBytes() {
+        ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.putShort(0x8, (short) getId());
         buffer.put(0xa, (byte) getLevel());
         buffer.put(0xb, (byte) getCommander().ordinal());
@@ -135,6 +135,6 @@ public class SpawnEvent extends MissionEvent {
         buffer.putFloat(0x14, (float) getPosition().getX());
         buffer.putFloat(0x18, (float) getPosition().getY());
         buffer.putFloat(0x1c, (float) getPosition().getZ());
-        return buffer;
+        return buffer.array();
     }
 }

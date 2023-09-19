@@ -1,9 +1,9 @@
 package com.crystalpixel.neogfutils.event;
 
-import com.crystalpixel.neogfutils.system.Exportable;
+import com.crystalpixel.neogfutils.system.Serializable;
 
 import java.nio.ByteBuffer;
-public abstract class MissionEvent implements Exportable {
+public abstract class MissionEvent implements Serializable {
 
     private int timer1;
     private int timer2;

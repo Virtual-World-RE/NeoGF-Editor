@@ -1,9 +1,9 @@
 package com.crystalpixel.neogfutils.system;
 
-import com.crystalpixel.neogfutils.scriptevents.MissionEvent;
-
 import java.nio.ByteBuffer;
 import java.util.List;
+
+import com.crystalpixel.neogfutils.event.MissionEvent;
 
 public class MissionScript implements Exportable {
 

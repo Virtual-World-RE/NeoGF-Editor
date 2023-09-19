@@ -3,7 +3,6 @@ package com.crystalpixel.neogfutils.event;
 import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.battle.Commander;
-import com.crystalpixel.neogfutils.event.MissionEvent;
 public class SpeechEvent extends MissionEvent {
 
     private Commander commander;
@@ -48,13 +47,13 @@ public class SpeechEvent extends MissionEvent {
     }
 
     @Override
-    public ByteBuffer getAsBytes() {
-        ByteBuffer buffer = super.getAsBytes();
+    public byte[] getAsBytes() {
+        ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.put(0xa, ((byte) 0x74));
         buffer.put(0xb, ((byte) getCommander().ordinal()));
         buffer.put(0xc, ((byte) getSound()));
         buffer.put(0xd, (byte) (isVisible() ? 1 : 0));
         buffer.put(0xe, (byte) (isQueue() ? 1 : 0));
-        return buffer;
+        return buffer.array();
     }
 }

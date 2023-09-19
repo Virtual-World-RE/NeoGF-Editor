@@ -29,10 +29,10 @@ public class VoiceEvent extends MissionEvent {
     }
 
     @Override
-    public ByteBuffer getAsBytes() {
-        ByteBuffer buffer = super.getAsBytes();
+    public byte[] getAsBytes() {
+        ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.put(0xa, (byte) (isMute() ? 0x76 : 0x75));
         buffer.put(0xb, (byte) (getCommander() == null ? -1 : getCommander().ordinal()));
-        return buffer;
+        return buffer.array();
     }
 }

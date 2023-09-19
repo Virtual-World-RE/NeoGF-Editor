@@ -57,7 +57,7 @@ public class FocusEvent extends MissionEvent {
 
     @Override
     public byte[] getAsBytes() {
-        ByteBuffer buffer = super.getAsBytes();
+        ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.putShort(0x8, (short) getBorgSpecies().getId());
         buffer.put(0xa, (byte) 0x73);
         buffer.put(0xb, (byte) (isPause() ? 1 : 0));
