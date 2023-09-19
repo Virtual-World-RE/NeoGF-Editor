@@ -1,15 +1,17 @@
 package com.crystalpixel.neogfutils.scriptevents;
 
+import com.crystalpixel.neogfutils.system.Exportable;
+
 import java.nio.ByteBuffer;
 
-public abstract class ScriptEvent {
+public abstract class MissionEvent implements Exportable {
 
     private int timer1;
     private int timer2;
     private int slot1;
     private int slot2;
 
-    public ScriptEvent(int timer1, int timer2, int slot1, int slot2) {
+    public MissionEvent(int timer1, int timer2, int slot1, int slot2) {
         this.timer1 = timer1;
         this.timer2 = timer2;
         this.slot1 = slot1;
@@ -48,12 +50,12 @@ public abstract class ScriptEvent {
         this.slot2 = slot2;
     }
 
-    public ByteBuffer getAsBytes() {
+    public byte[] getAsBytes() {
         ByteBuffer buffer = ByteBuffer.allocate(32);
         buffer.putShort(0, ((short) getTimer1()));
         buffer.putShort(2, ((short) getTimer2()));
         buffer.putShort(4, ((short) getSlot1()));
         buffer.putShort(6, ((short) getSlot2()));
-        return buffer;
+        return buffer.array();
     }
 }
