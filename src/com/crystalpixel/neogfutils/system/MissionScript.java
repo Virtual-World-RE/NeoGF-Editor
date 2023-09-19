@@ -20,13 +20,18 @@ public class MissionScript implements Serializable {
     }
 
     @Override
+    public int getAllocation() {
+        return MissionEvent.ALLOCATION * missionEvents.size() + 1;
+    }
+
+    @Override
     public byte[] getAsBytes() {
-        ByteBuffer buffer = ByteBuffer.allocate(32 * missionEvents.size() + 1);
+        ByteBuffer buffer = ByteBuffer.allocate(getAllocation());
         for (MissionEvent missionEvent : missionEvents) {
             buffer.put(missionEvent.getAsBytes());
         }
-//        buffer.putShort(eventRepeatCount > 0 ? 0x7fff : 0xffff);
-//        buffer.putShort(eventRepeatCount);
-        return new byte[0];
+        buffer.putShort((short) (eventRepeatCount > 0 ? 0x7fff : 0xffff));
+        buffer.putShort((short) eventRepeatCount);
+        return buffer.array();
     }
 }

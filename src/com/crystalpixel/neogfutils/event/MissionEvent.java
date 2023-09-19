@@ -3,7 +3,10 @@ package com.crystalpixel.neogfutils.event;
 import com.crystalpixel.neogfutils.system.Serializable;
 
 import java.nio.ByteBuffer;
+
 public abstract class MissionEvent implements Serializable {
+
+    public static final int ALLOCATION = 0x20;
 
     private int timer1;
     private int timer2;
@@ -49,12 +52,17 @@ public abstract class MissionEvent implements Serializable {
         this.slot2 = slot2;
     }
 
+    @Override
+    public int getAllocation() {
+        return ALLOCATION;
+    }
+
     public byte[] getAsBytes() {
-        ByteBuffer buffer = ByteBuffer.allocate(32);
-        buffer.putShort(0, ((short) getTimer1()));
-        buffer.putShort(2, ((short) getTimer2()));
-        buffer.putShort(4, ((short) getSlot1()));
-        buffer.putShort(6, ((short) getSlot2()));
+        ByteBuffer buffer = ByteBuffer.allocate(getAllocation());
+        buffer.putShort(0x0, ((short) getTimer1()));
+        buffer.putShort(0x2, ((short) getTimer2()));
+        buffer.putShort(0x4, ((short) getSlot1()));
+        buffer.putShort(0x6, ((short) getSlot2()));
         return buffer.array();
     }
 }

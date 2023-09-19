@@ -29,9 +29,9 @@ public class Battle {
         this.timer = timer;
         this.battleOptions = enabledOptions;
 
-        for (BattleOptions option : enabledOptions) {
-            battleOptions.(option);
-        }
+//        for (BattleOptions option : enabledOptions) {
+//            battleOptions.(option);
+//        }
 
         this.allyScore = allyScore;
         this.enemyScore = enemyScore;

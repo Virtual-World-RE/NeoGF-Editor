@@ -176,7 +176,7 @@ public class StoryUtils {
                     break;
                 }
                 case 0x74: {
-                    Commander commander = Commander.get(byteBuffer.get(0xb));
+                    Commander commander = Commander.get(byteBuffer.get(0xb) & 0xff);
                     int voice = byteBuffer.get(0xc) & 0xff;
                     boolean visible = byteBuffer.get(0xd) == 1;
                     boolean queue = byteBuffer.get(0xe) == 1;

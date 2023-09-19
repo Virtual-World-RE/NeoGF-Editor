@@ -63,13 +63,8 @@ public class BattleParser {
         main.makeShiftCode(0x8039717e, 4, 0xec);
     }
 
-<<<<<<< HEAD
-    private List<Event> getCustomBattleScript() {
-        List<Event> scriptEvents = new ArrayList<>();
-=======
     private List<MissionEvent> getCustomBattleScript() {
         List<MissionEvent> missionEvents = new ArrayList<>();
->>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69
         VoiceEvent voiceEvent = new VoiceEvent(0, 0, 5, 5);
         voiceEvent.setMute(true);
         missionEvents.add(voiceEvent);
@@ -110,15 +105,9 @@ public class BattleParser {
         }
     }
 
-<<<<<<< HEAD
-    private void makeBattleScriptCode(int startAddress, List<Event> scriptEvents) {
-        for (Event scriptEvent : scriptEvents) {
-            ByteBuffer scriptBytes = scriptEvent.getAsBytes();
-=======
     private void makeBattleScriptCode(int startAddress, List<MissionEvent> missionEvents) {
         for (MissionEvent missionEvent : missionEvents) {
             ByteBuffer scriptBytes = ByteBuffer.wrap(missionEvent.getAsBytes());
->>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69
             while (scriptBytes.hasRemaining()) {
                 int codeLine1 = (0x00FFFFFF & startAddress) | 0x04000000;
                 int codeLine2 = scriptBytes.getInt();
