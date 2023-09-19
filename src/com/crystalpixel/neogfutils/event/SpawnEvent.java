@@ -5,12 +5,7 @@ import javafx.geometry.Point3D;
 import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.battle.Commander;
-
-<<<<<<< HEAD:src/com/crystalpixel/neogfutils/event/SpawnEvent.java
-public class SpawnEvent extends Event {
-=======
 public class SpawnEvent extends MissionEvent {
->>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69:src/com/crystalpixel/neogfutils/scriptevents/SpawnEvent.java
 
     private int id;
     private int level;

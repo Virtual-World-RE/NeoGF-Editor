@@ -3,23 +3,14 @@ package com.crystalpixel.neogfutils.event;
 import com.crystalpixel.neogfutils.system.Exportable;
 
 import java.nio.ByteBuffer;
-
-<<<<<<<< HEAD:src/com/crystalpixel/neogfutils/event/Event.java
-public abstract class Event {
-========
 public abstract class MissionEvent implements Exportable {
->>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69:src/com/crystalpixel/neogfutils/event/MissionEvent.java
 
     private int timer1;
     private int timer2;
     private int slot1;
     private int slot2;
 
-<<<<<<<< HEAD:src/com/crystalpixel/neogfutils/event/Event.java
-    public Event(int timer1, int timer2, int slot1, int slot2) {
-========
     public MissionEvent(int timer1, int timer2, int slot1, int slot2) {
->>>>>>>> e57a79eb2b65ee68408796d9e7e13417bd9edc69:src/com/crystalpixel/neogfutils/event/MissionEvent.java
         this.timer1 = timer1;
         this.timer2 = timer2;
         this.slot1 = slot1;
