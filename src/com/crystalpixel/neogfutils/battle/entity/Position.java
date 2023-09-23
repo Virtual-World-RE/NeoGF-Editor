@@ -1,4 +1,4 @@
-package com.crystalpixel.neogfutils.game.entity;
+package com.crystalpixel.neogfutils.battle.entity;
 
 public class Position {
 

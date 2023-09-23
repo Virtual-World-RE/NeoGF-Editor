@@ -2,7 +2,7 @@ package com.crystalpixel.neogfutils.event.cutscene;
 
 import java.nio.ByteBuffer;
 
-import com.crystalpixel.neogfutils.battle.Commander;
+import com.crystalpixel.neogfutils.battle.entity.Commander;
 
 public class PortraitImageEvent implements GameEvent {
 

@@ -1,4 +1,4 @@
-package com.crystalpixel.neogfutils.battle;
+package com.crystalpixel.neogfutils.battle.entity;
 
 public enum Commander {
 

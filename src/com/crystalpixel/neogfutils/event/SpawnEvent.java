@@ -3,8 +3,8 @@ package com.crystalpixel.neogfutils.event;
 import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.annotation.NotNull;
-import com.crystalpixel.neogfutils.battle.Commander;
-import com.crystalpixel.neogfutils.game.entity.Position;
+import com.crystalpixel.neogfutils.battle.entity.Commander;
+import com.crystalpixel.neogfutils.battle.entity.Position;
 public class SpawnEvent extends MissionEvent {
 
     private int id;

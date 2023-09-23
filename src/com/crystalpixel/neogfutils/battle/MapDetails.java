@@ -1,5 +1,7 @@
 package com.crystalpixel.neogfutils.battle;
 
+import com.crystalpixel.neogfutils.battle.entity.Commander;
+
 public class MapDetails {
 
     private byte mapLocation;

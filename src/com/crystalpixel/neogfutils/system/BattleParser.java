@@ -6,7 +6,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-import com.crystalpixel.neogfutils.battle.Commander;
+import com.crystalpixel.neogfutils.battle.entity.Commander;
 import com.crystalpixel.neogfutils.borg.BorgLevelStats;
 import com.crystalpixel.neogfutils.event.*;
 import com.crystalpixel.neogfutils.event.cutscene.*;

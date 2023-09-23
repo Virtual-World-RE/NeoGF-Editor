@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.crystalpixel.neogfutils.game.entity.Position;
+import com.crystalpixel.neogfutils.battle.entity.Opponent;
+import com.crystalpixel.neogfutils.battle.entity.Position;
 
 public class Battle {
 

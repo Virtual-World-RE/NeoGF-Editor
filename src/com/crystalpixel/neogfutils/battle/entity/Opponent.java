@@ -1,10 +1,9 @@
-package com.crystalpixel.neogfutils.battle;
+package com.crystalpixel.neogfutils.battle.entity;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import com.crystalpixel.neogfutils.game.entity.Position;
 import com.crystalpixel.neogfutils.system.BorgSpecies;
 import com.crystalpixel.neogfutils.utils.Utils;
 import com.crystalpixel.neogfutils.utils.borg.BorgListUtils;

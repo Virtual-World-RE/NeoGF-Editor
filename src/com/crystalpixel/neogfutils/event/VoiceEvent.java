@@ -3,7 +3,7 @@ package com.crystalpixel.neogfutils.event;
 import java.nio.ByteBuffer;
 
 import com.crystalpixel.neogfutils.annotation.NotNull;
-import com.crystalpixel.neogfutils.battle.Commander;
+import com.crystalpixel.neogfutils.battle.entity.Commander;
 public class VoiceEvent extends MissionEvent {
 
     private Commander commander;

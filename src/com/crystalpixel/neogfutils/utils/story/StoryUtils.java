@@ -9,10 +9,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.crystalpixel.neogfutils.battle.Battle;
-import com.crystalpixel.neogfutils.battle.Commander;
 import com.crystalpixel.neogfutils.battle.MapLocation;
-import com.crystalpixel.neogfutils.battle.Opponent;
-import com.crystalpixel.neogfutils.game.entity.Position;
+import com.crystalpixel.neogfutils.battle.entity.Commander;
+import com.crystalpixel.neogfutils.battle.entity.Opponent;
+import com.crystalpixel.neogfutils.battle.entity.Position;
 import com.crystalpixel.neogfutils.event.*;
 import com.crystalpixel.neogfutils.game.*;
 import com.crystalpixel.neogfutils.system.BorgSpecies;
