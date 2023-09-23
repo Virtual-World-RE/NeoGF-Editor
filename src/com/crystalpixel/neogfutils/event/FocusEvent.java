@@ -2,6 +2,7 @@ package com.crystalpixel.neogfutils.event;
 
 import java.nio.ByteBuffer;
 
+import com.crystalpixel.neogfutils.annotation.NotNull;
 import com.crystalpixel.neogfutils.system.BorgSpecies;
 public class FocusEvent extends MissionEvent {
 
@@ -56,6 +57,7 @@ public class FocusEvent extends MissionEvent {
     }
 
     @Override
+    @NotNull
     public byte[] getAsBytes() {
         ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.putShort(0x8, (short) getBorgSpecies().getId());

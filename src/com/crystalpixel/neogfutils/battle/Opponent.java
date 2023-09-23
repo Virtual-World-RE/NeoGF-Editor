@@ -1,11 +1,10 @@
 package com.crystalpixel.neogfutils.battle;
 
-import javafx.geometry.Point3D;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import com.crystalpixel.neogfutils.game.entity.Position;
 import com.crystalpixel.neogfutils.system.BorgSpecies;
 import com.crystalpixel.neogfutils.utils.Utils;
 import com.crystalpixel.neogfutils.utils.borg.BorgListUtils;
@@ -16,10 +15,10 @@ public class Opponent {
     private int difficulty;
     private int borgListId;
     private int level;
-    private Point3D coordinates;
+    private Position coordinates;
     private int entrance;
 
-    public Opponent(Commander commander, int difficulty, int borgListId, int level, Point3D coordinates, int entrance) {
+    public Opponent(Commander commander, int difficulty, int borgListId, int level, Position coordinates, int entrance) {
         this.commander = commander;
         this.difficulty = difficulty;
         this.borgListId = borgListId;
@@ -64,11 +63,11 @@ public class Opponent {
         this.level = level;
     }
 
-    public Point3D getCoordinates() {
+    public Position getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(Point3D coordinates) {
+    public void setCoordinates(Position coordinates) {
         this.coordinates = coordinates;
     }
 

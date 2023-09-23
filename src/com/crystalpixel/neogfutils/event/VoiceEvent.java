@@ -2,6 +2,7 @@ package com.crystalpixel.neogfutils.event;
 
 import java.nio.ByteBuffer;
 
+import com.crystalpixel.neogfutils.annotation.NotNull;
 import com.crystalpixel.neogfutils.battle.Commander;
 public class VoiceEvent extends MissionEvent {
 
@@ -29,6 +30,7 @@ public class VoiceEvent extends MissionEvent {
     }
 
     @Override
+    @NotNull
     public byte[] getAsBytes() {
         ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.put(0xa, (byte) (isMute() ? 0x76 : 0x75));

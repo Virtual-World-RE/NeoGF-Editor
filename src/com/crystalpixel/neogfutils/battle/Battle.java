@@ -1,38 +1,35 @@
 package com.crystalpixel.neogfutils.battle;
 
-import javafx.geometry.Point3D;
-
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import com.crystalpixel.neogfutils.game.entity.Position;
 
 public class Battle {
 
     private List<Opponent> opponents = new ArrayList<>();
-    private Point3D playerCoordinates;
-    private Point3D allyCoordinates;
+    private Position playerCoordinates;
+    private Position allyCoordinates;
     private int playerEntrance;
     private int allyEntrance;
     private int timer;
-    private BattleOptions[] battleOptions;
+    private int battleOptions;
     private int allyScore;
     private int enemyScore;
     private int allyHandicap;
     private int enemyHandicap;
     private int music;
 
-    public Battle(Point3D playerCoordinates, Point3D allyCoordinates, int playerEntrance, int allyEntrance, int timer,
-            BattleOptions[] enabledOptions, int allyScore, int enemyScore, int allyHandicap, int enemyHandicap, int music) {
+    public Battle(Position playerCoordinates, Position allyCoordinates, int playerEntrance, int allyEntrance, int timer,
+            int battleOptions, int allyScore, int enemyScore, int allyHandicap, int enemyHandicap, int music) {
         this.playerCoordinates = playerCoordinates;
         this.allyCoordinates = allyCoordinates;
         this.playerEntrance = playerEntrance;
         this.allyEntrance = allyEntrance;
         this.timer = timer;
-        this.battleOptions = enabledOptions;
-
-//        for (BattleOptions option : enabledOptions) {
-//            battleOptions.(option);
-//        }
-
+        this.battleOptions = battleOptions;
         this.allyScore = allyScore;
         this.enemyScore = enemyScore;
         this.allyHandicap = allyHandicap;
@@ -48,19 +45,19 @@ public class Battle {
         opponents.add(opponent);
     }
 
-    public Point3D getPlayerCoordinates() {
+    public Position getPlayerCoordinates() {
         return playerCoordinates;
     }
 
-    public void setPlayerCoordinates(Point3D playerCoordinates) {
+    public void setPlayerCoordinates(Position playerCoordinates) {
         this.playerCoordinates = playerCoordinates;
     }
 
-    public Point3D getAllyCoordinates() {
+    public Position getAllyCoordinates() {
         return allyCoordinates;
     }
 
-    public void setAllyCoordinates(Point3D allyCoordinates) {
+    public void setAllyCoordinates(Position allyCoordinates) {
         this.allyCoordinates = allyCoordinates;
     }
 
@@ -86,6 +83,22 @@ public class Battle {
 
     public void setTimer(int timer) {
         this.timer = timer;
+    }
+
+    public Set<BattleOptions> getEnabledOptions() {
+        Set<BattleOptions> enabledOptions = new HashSet<>();
+
+        for (BattleOptions option : BattleOptions.values()) {
+            if (getEnabledOption(option)) {
+                enabledOptions.add(option);
+            }
+        }
+
+        return enabledOptions;
+    }
+
+    public boolean getEnabledOption(BattleOptions battleOptions) {
+        return BattleOptions.isOptionEnabled(this.battleOptions, battleOptions);
     }
 
     public int getAllyScore() {

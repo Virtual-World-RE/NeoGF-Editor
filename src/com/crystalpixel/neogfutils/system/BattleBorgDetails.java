@@ -27,8 +27,14 @@ public class BattleBorgDetails {
         List<SpawnEvent> spawnEvents = new ArrayList<>();
         Map<Integer, Integer> borgCounts = new TreeMap<>();
         while (scriptAddresses.hasRemaining()) {
-            spawnEvents.addAll(StoryUtils.readBattleScript(scriptAddresses.get()).stream().filter(se ->
-                    se instanceof SpawnEvent).map(SpawnEvent.class::cast).collect(Collectors.toList()));
+            spawnEvents.addAll(
+                       StoryUtils.readBattleScript(scriptAddresses.get())
+                       .stream()
+                       .filter(event -> event instanceof SpawnEvent)
+                       .map(event -> (SpawnEvent) event)
+                       .collect(Collectors.toList())
+            );
+
         }
         spawnEvents.forEach(be -> borgCounts.put(be.getId(), borgCounts.containsKey(be.getId()) ? borgCounts.get(be.getId()) + 1 : 1));
 

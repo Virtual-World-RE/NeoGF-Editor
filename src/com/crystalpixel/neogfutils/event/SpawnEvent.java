@@ -1,10 +1,10 @@
 package com.crystalpixel.neogfutils.event;
 
-import javafx.geometry.Point3D;
-
 import java.nio.ByteBuffer;
 
+import com.crystalpixel.neogfutils.annotation.NotNull;
 import com.crystalpixel.neogfutils.battle.Commander;
+import com.crystalpixel.neogfutils.game.entity.Position;
 public class SpawnEvent extends MissionEvent {
 
     private int id;
@@ -18,7 +18,7 @@ public class SpawnEvent extends MissionEvent {
     private boolean boss;
     private int rotation;
     private int entrance;
-    private Point3D position;
+    private Position position;
 
     public SpawnEvent(int timer1, int timer2, int slot1, int slot2) {
         super(timer1, timer2, slot1, slot2);
@@ -112,15 +112,16 @@ public class SpawnEvent extends MissionEvent {
         this.entrance = entrance;
     }
 
-    public Point3D getPosition() {
+    public Position getPosition() {
         return position;
     }
 
-    public void setPosition(Point3D position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
 
     @Override
+    @NotNull
     public byte[] getAsBytes() {
         ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.putShort(0x8, (short) getId());

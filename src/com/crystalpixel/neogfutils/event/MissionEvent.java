@@ -1,5 +1,6 @@
 package com.crystalpixel.neogfutils.event;
 
+import com.crystalpixel.neogfutils.annotation.NotNull;
 import com.crystalpixel.neogfutils.system.Serializable;
 
 import java.nio.ByteBuffer;
@@ -57,6 +58,8 @@ public abstract class MissionEvent implements Serializable {
         return ALLOCATION;
     }
 
+    @Override
+    @NotNull
     public byte[] getAsBytes() {
         ByteBuffer buffer = ByteBuffer.allocate(getAllocation());
         buffer.putShort(0x0, ((short) getTimer1()));

@@ -2,6 +2,7 @@ package com.crystalpixel.neogfutils.event;
 
 import java.nio.ByteBuffer;
 
+import com.crystalpixel.neogfutils.annotation.NotNull;
 import com.crystalpixel.neogfutils.game.Music;
 
 public class MusicEvent extends MissionEvent {
@@ -21,6 +22,7 @@ public class MusicEvent extends MissionEvent {
     }
 
     @Override
+    @NotNull
     public byte[] getAsBytes() {
         ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.put(0xa, ((byte) 0x72));
