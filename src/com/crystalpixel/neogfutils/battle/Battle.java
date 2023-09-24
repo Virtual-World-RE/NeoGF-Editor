@@ -1,8 +1,10 @@
 package com.crystalpixel.neogfutils.battle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.crystalpixel.neogfutils.battle.entity.Opponent;
@@ -98,6 +100,17 @@ public class Battle {
 
         return enabledOptions;
     }
+
+    public Map<String, Boolean> getAllOptions() {
+        Map<String, Boolean> allOptions = new HashMap<>();
+
+        for (BattleOptions option : BattleOptions.values()) {
+            allOptions.put(option.getName(), getEnabledOption(option));
+        }
+
+        return allOptions;
+    }
+
 
     public boolean getEnabledOption(BattleOptions battleOptions) {
         return BattleOptions.isOptionEnabled(this.battleOptions, battleOptions);
