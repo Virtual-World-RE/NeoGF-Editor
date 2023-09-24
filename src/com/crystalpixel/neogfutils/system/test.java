@@ -15,7 +15,5 @@ public class test {
         .findAny()
         .map(opponent -> opponent.getCommander() != null ? opponent.getCommander().getName() : Commander.NONE.getName())
         .orElse("No opponent found"));
-
-
     }
 }

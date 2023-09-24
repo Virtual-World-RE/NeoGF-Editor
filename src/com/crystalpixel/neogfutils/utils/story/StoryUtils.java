@@ -26,7 +26,7 @@ public class StoryUtils {
     private static final int BATTLE_CONFIGURATION_START_ADDRESS = 0x803864c8;
     private static final int OPPONENT_START_ADDRESS = 0x803867e8;
 
-    public static Opponent getOpponent(int index) throws IOException {
+    public static Opponent getOpponent(byte index) throws IOException {
         if (index == -1)
             return null;
         ByteBuffer buffer = Utils.seekRaf(OPPONENT_START_ADDRESS + index * 20, new byte[20]);
@@ -42,8 +42,8 @@ public class StoryUtils {
 
     public static Battle readBattle(int startAddress) throws IOException {
         ByteBuffer buffer = Utils.seekRaf(startAddress, new byte[48]);
-        return new Battle(Arrays.asList(getOpponent(buffer.getInt(0x0)), getOpponent(buffer.getInt(0x2)),
-                getOpponent(buffer.getInt(0x4)), getOpponent(buffer.getInt(0x6)), getOpponent(buffer.getInt(0x8))), 
+        return new Battle(Arrays.asList(getOpponent(buffer.get(0x0)), getOpponent(buffer.get(0x2)),
+                getOpponent(buffer.get(0x4)), getOpponent(buffer.get(0x6)), getOpponent(buffer.get(0x8))), 
                 new Position(buffer.getFloat(0xC), buffer.getFloat(0x10), buffer.getFloat(0x14)),
                 new Position(buffer.getFloat(0x18), buffer.getFloat(0x1C), buffer.getFloat(0x20)),
                 buffer.get(0x24) & 0xFF, buffer.get(0x25) & 0xFF, buffer.getShort(0x26) & 0xFFFF,
