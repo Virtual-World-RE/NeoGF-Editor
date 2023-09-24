@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.crystalpixel.neogfutils.battle.Battle;
@@ -29,15 +30,9 @@ public class StoryUtils {
         if (index == -1)
             return null;
         ByteBuffer buffer = Utils.seekRaf(OPPONENT_START_ADDRESS + index * 20, new byte[20]);
-        Opponent opponent = new Opponent(
-                Commander.get(buffer.get(0)),
-                buffer.get(0x1),
-                buffer.get(0x2) & 0xFF,
-                buffer.get(0x3) & 0xFF,
-                new Position(buffer.getFloat(0x4), buffer.getFloat(0x8), buffer.getFloat(0xC)),
+        return new Opponent(Commander.get(buffer.get(0)), buffer.get(0x1), buffer.get(0x2) & 0xFF,
+                buffer.get(0x3) & 0xFF, new Position(buffer.getFloat(0x4), buffer.getFloat(0x8), buffer.getFloat(0xC)),
                 buffer.get(0x10) & 0xFF);
-
-        return opponent;
     }
 
     // Returns an IntBuffer of four pointers, each representing a script's address.
@@ -47,7 +42,9 @@ public class StoryUtils {
 
     public static Battle readBattle(int startAddress) throws IOException {
         ByteBuffer buffer = Utils.seekRaf(startAddress, new byte[48]);
-        return new Battle(new Position(buffer.getFloat(0xC), buffer.getFloat(0x10), buffer.getFloat(0x14)),
+        return new Battle(Arrays.asList(getOpponent(buffer.getInt(0x0)), getOpponent(buffer.getInt(0x2)),
+                getOpponent(buffer.getInt(0x4)), getOpponent(buffer.getInt(0x6)), getOpponent(buffer.getInt(0x8))), 
+                new Position(buffer.getFloat(0xC), buffer.getFloat(0x10), buffer.getFloat(0x14)),
                 new Position(buffer.getFloat(0x18), buffer.getFloat(0x1C), buffer.getFloat(0x20)),
                 buffer.get(0x24) & 0xFF, buffer.get(0x25) & 0xFF, buffer.getShort(0x26) & 0xFFFF,
                 buffer.getShort(0x28) & 0xFFFF, buffer.get(0x2A) & 0xFF, buffer.get(0x2B) & 0xFF,

@@ -23,8 +23,9 @@ public class Battle {
     private int enemyHandicap;
     private int music;
 
-    public Battle(Position playerCoordinates, Position allyCoordinates, int playerEntrance, int allyEntrance, int timer,
+    public Battle(List<Opponent> opponents,Position playerCoordinates, Position allyCoordinates, int playerEntrance, int allyEntrance, int timer,
             int battleOptions, int allyScore, int enemyScore, int allyHandicap, int enemyHandicap, int music) {
+        this.opponents = opponents;
         this.playerCoordinates = playerCoordinates;
         this.allyCoordinates = allyCoordinates;
         this.playerEntrance = playerEntrance;
