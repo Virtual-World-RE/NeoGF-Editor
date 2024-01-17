@@ -1,4 +1,4 @@
-package com.crystalpixel.neogfutils.HSD;
+package com.crystalpixel.neogfutils.game.HSD;
 
 public enum JObjFlags {
     NULL(0x00000000),

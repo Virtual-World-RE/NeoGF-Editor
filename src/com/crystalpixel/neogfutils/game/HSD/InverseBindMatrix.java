@@ -1,4 +1,4 @@
-package com.crystalpixel.neogfutils.HSD;
+package com.crystalpixel.neogfutils.game.HSD;
 
 public class InverseBindMatrix {
     private float rotationXX;
