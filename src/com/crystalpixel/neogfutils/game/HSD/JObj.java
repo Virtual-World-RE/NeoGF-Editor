@@ -2,19 +2,25 @@ package com.crystalpixel.neogfutils.game.HSD;
 
 import com.crystalpixel.neogfutils.utils.math.Quaternion;
 import com.crystalpixel.neogfutils.utils.math.Mtx.Mtx;
+import com.crystalpixel.neogfutils.utils.math.Mtx.MtxPtr;
 import com.crystalpixel.neogfutils.utils.math.vector.Vect3;
 
 public class JObj {
     Obj object;
+    JObj  next;
+    JObj parent;
+    JObj child;
     JObjFlags flags;
-    JObj  childOffset;
-    JObj nextOffset;
-    JObj dobjOffset;
+    JObjData data;
     Quaternion rotation;
     Vect3 scale;
     Vect3 translation;
     Mtx mtx;
-    int robjOffset;
+    Vect3 scl;
+    MtxPtr envelopemtx;
+    AObj aobj;
+    RObj robj;
+    int id;
 
     public JObj() {
         this(JObjFlags.NULL);

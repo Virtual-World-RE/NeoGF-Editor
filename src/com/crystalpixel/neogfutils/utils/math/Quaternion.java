@@ -1,5 +1,6 @@
 package com.crystalpixel.neogfutils.utils.math;
 
+import java.lang.Math;
 public class Quaternion {
     private double w, x, y, z;
 
