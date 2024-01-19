@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.CharBuffer;
 
 import com.crystalpixel.neogfutils.utils.Utils;
 
@@ -92,7 +94,7 @@ public class ArchiveManager {
             String symbol = new String(archive.symbols, archive.public_info[i].symbol, symbols.length());
 
             if (symbol.equals(symbols)) {
-                return ByteBuffer.wrap(archive.data, archive.public_info[i].offset,4).get();
+                return ByteBuffer.wrap(archive.data, archive.public_info[i].offset, archive.data.length - archive.public_info[i].offset).get();
             }
         }
 
@@ -104,7 +106,39 @@ public class ArchiveManager {
             return -1;
         }
 
-        return ByteBuffer.wrap(archive.symbols.toString().getBytes(), archive.extern_info[offset].symbol, 4).get();
+        return CharBuffer.wrap(archive.symbols, archive.extern_info[offset].symbol, archive.symbols.length - archive.extern_info[offset].symbol).get();
+    }
+
+    public static void ArchiveLocateExtern(Archive archive, String symbols, Object addr) {
+        long next;
+        long offset = -1;
+        int i;
+
+        for (i = 0; i < archive.header.nb_extern; i++) {
+            String symbol = new String(archive.symbols, archive.extern_info[i].symbol, symbols.length());
+            int comparison = symbols.compareTo(symbol);
+
+            if (comparison == 0) {
+                offset = archive.extern_info[i].offset;
+                break;
+            }
+        }
+
+        if (offset == -1) {
+            return;
+        }
+
+        while (offset != -1 && offset < archive.header.data_size) {
+            next = ByteBuffer.wrap(archive.data, (int) offset, Long.BYTES)
+                    .order(ByteOrder.LITTLE_ENDIAN)
+                    .getLong();
+
+            ByteBuffer.wrap(archive.data, (int) offset, Long.BYTES)
+                    .order(ByteOrder.LITTLE_ENDIAN)
+                    .putLong((long) addr);
+
+            offset = next;
+        }
     }
 
     private static byte[] getVersion(byte index) throws IOException {
