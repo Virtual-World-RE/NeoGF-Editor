@@ -30,14 +30,9 @@ public class Mtx {
 
     public static void invertMTX(Mtx src, Mtx dest) {
         float det = calcDeterminantMTX(src);
-        Mtx tempMatrix = new Mtx();
 
         if (Math.abs(det) < EPSILON) {
             PSMtxIdentity(dest);
-        }
-
-        if (src != dest) {
-            PSMtxCopy(src, tempMatrix);
         }
 
         float invDet = 1.0f / det;
@@ -188,16 +183,12 @@ public class Mtx {
 
     public static void MtxInverseTranspose(Mtx src, Mtx dest) {
         float det = calcDeterminantMTX(src);
-        Mtx tempMatrix = new Mtx();
 
         if (Math.abs(det) < EPSILON) {
             if (src != dest) {
                 PSMtxCopy(src, dest);
             }
         } else {
-            if (src == dest) {
-                PSMtxCopy(src, tempMatrix);
-            }
 
             float invDet = 1.0f / det;
 
@@ -250,7 +241,7 @@ public class Mtx {
         }
     }
 
-    public static void HSD_MtxGetRotation(Mtx m, Vect3 vec) {
+    public static void MtxGetRotation(Mtx m, Vect3 vec) {
         float length0 = (float) Math.sqrt(m.getElement(0, 0) * m.getElement(0, 0) +
                                          m.getElement(1, 0) * m.getElement(1, 0) +
                                          m.getElement(2, 0) * m.getElement(2, 0));
@@ -301,13 +292,13 @@ public class Mtx {
     }
 
     // These parameters may not be right
-    public static void HSD_MtxGetTranslate(Mtx mat, Vect3 vec) {
+    public static void MtxGetTranslate(Mtx mat, Vect3 vec) {
         vec.setX(mat.getElement(0, 3));
         vec.setY(mat.getElement(1, 3));
         vec.setZ(mat.getElement(2, 3));
     }
 
-    public static void HSD_MtxGetScale(Mtx mat, Vect3 vec) {
+    public static void MtxGetScale(Mtx mat, Vect3 vec) {
         double scale;
 
         Vect3 vec1 = new Vect3();
@@ -327,23 +318,55 @@ public class Mtx {
         vec2.setZ(mat.getElement(2, 1));
 
         PSVECScale(vec1, vec4, PSVECDotProduct(vec1, vec2));
-        
+        PSVECSubtract(vec2, vec4, vec2);
         vec.setY(PSVECMag(vec2));
         PSVECNormalize(vec2, vec2);
-        
+
+        vec3.setX(mat.getElement(0, 2));
+        vec3.setY(mat.getElement(1, 2));
+        vec3.setZ(mat.getElement(2, 2));
+
+        PSVECScale(vec2, vec4, PSVECDotProduct(vec2, vec3));
+        PSVECSubtract(vec3, vec4, vec3);
+        PSVECScale(vec1, vec4, PSVECDotProduct(vec1, vec3));
+        PSVECSubtract(vec3, vec4, vec3);
+        vec.setZ(PSVECMag(vec3));
+        PSVECNormalize(vec3, vec3);
+        PSVECCrossProduct(vec2, vec3, vec4);
+
+        if (PSVECDotProduct(vec1, vec4) < 0.0) {
+                scale = -1.0;
+                vec.setX(vec.getX() * (float) scale);
+                vec.setY(vec.getY() * (float) scale);
+                vec.setZ(vec.getZ() * (float) scale);
+        } 
     }
 
-    public static float PSVECDotProduct(Vect3 a, Vect3 b) {
+    
+
+    public static void PSVECCrossProduct(Vect3 a, Vect3 b, Vect3 axb) {
+        axb.setX(a.getY() * b.getZ() - a.getZ() * b.getY());
+        axb.setY(a.getZ() * b.getX() - a.getX() * b.getZ());
+        axb.setZ(a.getX() * b.getY() - a.getY() * b.getX());
+    }    
+
+    private static void PSVECSubtract(final Vect3 a, final Vect3 b, Vect3 ab) {
+        ab.setX(a.getX() - b.getX());
+        ab.setY(a.getY() - b.getY());
+        ab.setZ(a.getZ() - b.getZ());
+    }
+
+    private static float PSVECDotProduct(Vect3 a, Vect3 b) {
         return (a.getX() * b.getX()) + (a.getY() * b.getY()) + (a.getZ() * b.getZ());
     }    
 
-    public static void PSVECScale(Vect3 src, Vect3 dst, float scale) {
+    private static void PSVECScale(Vect3 src, Vect3 dst, float scale) {
         dst.setX(src.getX() * scale);
         dst.setY(src.getY() * scale);
         dst.setZ(src.getZ() * scale);
     }
 
-    public static void PSVECNormalize(Vect3 vec, Vect3 result) {
+    private static void PSVECNormalize(Vect3 vec, Vect3 result) {
         float m = vec.getX() * vec.getX() + vec.getY() * vec.getY() + vec.getZ() * vec.getZ();
         m = (float) (1 / Math.sqrt(m));
     
