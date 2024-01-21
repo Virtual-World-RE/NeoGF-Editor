@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import com.crystalpixel.neogfutils.utils.math.DynamicByteBuffer;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -93,21 +95,21 @@ public class PZZFileTreeGUI extends JFrame {
                     String outputFilePath = String.format("D:/Bordel/GotchaForce/FULL_AFS_FILE_DUMP/%dpl0708.dat", fileIndex);
                     try (FileOutputStream outputStream = new FileOutputStream(outputFilePath)) {
                         outputStream.write(decompressedData);
-                        JOptionPane.showMessageDialog(this, "Fichier décompressé avec succès et sauvegardé sous " + outputFilePath);
+                        JOptionPane.showMessageDialog(this, "File successfully decompressed and saved as " + outputFilePath);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        JOptionPane.showMessageDialog(this, "Erreur lors de la sauvegarde du fichier décompressé.");
+                        JOptionPane.showMessageDialog(this, "Error saving decompressed file.");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Le fichier n'est pas compressé.");
+                    JOptionPane.showMessageDialog(this, "The file is not compressed.");
                 }
             }
         }
     }      
 
-public static byte[] pzzDecompress(byte[] compressedBytes) {
+    public static byte[] pzzDecompress(byte[] compressedBytes) {
         ByteBuffer compressedBuffer = ByteBuffer.wrap(compressedBytes);
-        ByteBuffer uncompressedBuffer = ByteBuffer.allocate((compressedBytes.length * 2));
+        DynamicByteBuffer uncompressedBuffer = new DynamicByteBuffer();
 
         while (compressedBuffer.position() < compressedBuffer.limit()) {
             int cb = compressedBuffer.getShort() & 0xFFFF;
@@ -141,7 +143,6 @@ public static byte[] pzzDecompress(byte[] compressedBytes) {
 
         return Arrays.copyOf(uncompressedBuffer.array(), uncompressedBuffer.position());
     }   
-    
 
     private static class FileNodeData {
         private final byte[] data;
