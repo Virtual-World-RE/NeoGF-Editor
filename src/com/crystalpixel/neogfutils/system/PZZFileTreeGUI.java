@@ -1,10 +1,13 @@
 package com.crystalpixel.neogfutils.system;
 
 import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import com.crystalpixel.neogfutils.utils.math.DynamicByteBuffer;
+
+import java.awt.event.KeyEvent;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,7 +38,49 @@ public class PZZFileTreeGUI extends JFrame {
                 onDecompressMenuItemClick();
             }
         });
+
+        JMenuItem selectAllMenuItem = new JMenuItem("Select All");
+        selectAllMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+        selectAllMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
+        JMenuItem copyMenuItem = new JMenuItem("Copy");
+        copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        copyMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
+        try {
+            UIManager.setLookAndFeel(new NimbusLookAndFeel());
+            UIManager.put("control", new Color(128, 128, 128));
+            UIManager.put("info", new Color(128, 128, 128));
+            UIManager.put("nimbusBase", new Color(18, 30, 49));
+            UIManager.put("nimbusAlertYellow", new Color(248, 187, 0));
+            UIManager.put("nimbusDisabledText", new Color(128, 128, 128));
+            UIManager.put("nimbusFocus", new Color(115, 164, 209));
+            UIManager.put("nimbusGreen", new Color(176, 179, 50));
+            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221));
+            UIManager.put("nimbusLightBackground", new Color(18, 30, 49));
+            UIManager.put("nimbusOrange", new Color(191, 98, 4));
+            UIManager.put("nimbusRed", new Color(169, 46, 34));
+            UIManager.put("nimbusSelectedText", new Color(255, 255, 255));
+            UIManager.put("nimbusSelectionBackground", new Color(104, 93, 156));
+            UIManager.put("text", new Color(230, 230, 230));
+            UIManager.put("JFrame.activeTitleBackground", Color.black);
+            SwingUtilities.updateComponentTreeUI(this);
+        } catch (UnsupportedLookAndFeelException exc) {
+            System.err.println("Nimbus: Unsupported Look and feel!");
+        }
+
         popupMenu.add(decompressMenuItem);
+        popupMenu.addSeparator();
+        popupMenu.add(selectAllMenuItem);
+        popupMenu.add(copyMenuItem);
 
         fileTree.setComponentPopupMenu(popupMenu);
 
@@ -49,7 +94,7 @@ public class PZZFileTreeGUI extends JFrame {
             int fileCount = randomAccessFile.readInt();
 
             int offsetIndex = DATA_OFFSET;
-    
+
             DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
 
             for (int i = 0; i < fileCount; i++) {
@@ -64,8 +109,9 @@ public class PZZFileTreeGUI extends JFrame {
                     randomAccessFile.seek(offsetIndex);
                     randomAccessFile.read(fileData);
                     offsetIndex += fileLength;
-                
-                    String fileName = "File " + (i + 1) + " - " + (isCompressed ? "Compressed" : "Uncompressed") + " - " + fileLength + " bytes";
+
+                    String fileName = "File " + (i + 1) + " - " + (isCompressed ? "Compressed" : "Uncompressed") + " - "
+                            + fileLength + " bytes";
                     DefaultMutableTreeNode fileNode = new DefaultMutableTreeNode(fileName);
                     fileNode.setUserObject(new FileNodeData(fileData, isCompressed));
                     root.add(fileNode);
@@ -92,10 +138,12 @@ public class PZZFileTreeGUI extends JFrame {
                     byte[] decompressedData = pzzDecompress(fileNodeData.getData());
 
                     int fileIndex = selectedNode.getParent().getIndex(selectedNode) + 1;
-                    String outputFilePath = String.format("D:/Bordel/GotchaForce/FULL_AFS_FILE_DUMP/%dpl0708.dat", fileIndex);
+                    String outputFilePath = String.format("D:/Bordel/GotchaForce/FULL_AFS_FILE_DUMP/%dpl0708.dat",
+                            fileIndex);
                     try (FileOutputStream outputStream = new FileOutputStream(outputFilePath)) {
                         outputStream.write(decompressedData);
-                        JOptionPane.showMessageDialog(this, "File successfully decompressed and saved as " + outputFilePath);
+                        JOptionPane.showMessageDialog(this,
+                                "File successfully decompressed and saved as " + outputFilePath);
                     } catch (IOException e) {
                         e.printStackTrace();
                         JOptionPane.showMessageDialog(this, "Error saving decompressed file.");
@@ -105,7 +153,7 @@ public class PZZFileTreeGUI extends JFrame {
                 }
             }
         }
-    }      
+    }
 
     public static byte[] pzzDecompress(byte[] compressedBytes) {
         ByteBuffer compressedBuffer = ByteBuffer.wrap(compressedBytes);
@@ -142,7 +190,7 @@ public class PZZFileTreeGUI extends JFrame {
         }
 
         return Arrays.copyOf(uncompressedBuffer.array(), uncompressedBuffer.position());
-    }   
+    }
 
     private static class FileNodeData {
         private final byte[] data;
