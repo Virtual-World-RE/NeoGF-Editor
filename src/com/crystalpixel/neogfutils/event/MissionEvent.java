@@ -1,9 +1,9 @@
 package com.crystalpixel.neogfutils.event;
 
+import java.nio.ByteBuffer;
+
 import com.crystalpixel.neogfutils.annotation.NotNull;
 import com.crystalpixel.neogfutils.system.Serializable;
-
-import java.nio.ByteBuffer;
 
 public abstract class MissionEvent implements Serializable {
 

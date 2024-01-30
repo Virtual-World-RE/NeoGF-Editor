@@ -1,10 +1,10 @@
 package com.crystalpixel.neogfutils.system;
 
-import com.crystalpixel.neogfutils.borg.BorgColor;
-import com.crystalpixel.neogfutils.utils.story.StoryUtils;
-
 import java.io.IOException;
 import java.util.List;
+
+import com.crystalpixel.neogfutils.borg.BorgColor;
+import com.crystalpixel.neogfutils.utils.story.StoryUtils;
 
 public class UnlistCondition extends Condition {
 

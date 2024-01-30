@@ -49,7 +49,7 @@ public class ButtonList extends AbstractList<Button> {
     public void customizeButton() {
         for (Button button : this.buttons) {
             button.setTextFill(Color.WHITE);
-            button.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 12px;");
+            button.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 12px; -fx-background-radius: 0; -fx-background-radius: 0");
         }
     }
 

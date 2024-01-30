@@ -2,13 +2,14 @@ package com.crystalpixel.neogfutils.system;
 
 import java.io.IOException;
 
-import com.crystalpixel.neogfutils.battle.Battle;
-import com.crystalpixel.neogfutils.battle.entity.Position;
-import com.crystalpixel.neogfutils.utils.story.StoryUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import com.crystalpixel.neogfutils.battle.Battle;
+import com.crystalpixel.neogfutils.battle.entity.Position;
+import com.crystalpixel.neogfutils.utils.story.StoryUtils;
 
 public class test {
 
