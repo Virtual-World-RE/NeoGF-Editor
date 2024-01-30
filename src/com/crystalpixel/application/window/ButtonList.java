@@ -6,7 +6,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +58,7 @@ public class ButtonList extends AbstractList<Button> {
             int position = i;
             switch (position) {
                 case 0:
-                    Image image = new Image(new File("resources/img/NewFile.png").toURI().toString());
+                    Image image = new Image(ButtonList.class.getResourceAsStream("/resources/img/icons/NewFile.png"));
                     button.setGraphic(new ImageView(image));
             }
         }

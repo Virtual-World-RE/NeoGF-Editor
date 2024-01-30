@@ -1,6 +1,5 @@
 package com.crystalpixel.application.window;
 
-import java.io.File;
 import java.util.stream.Stream;
 
 import javafx.geometry.Insets;
@@ -36,7 +35,7 @@ public class TitleBar extends HBox {
                 button.setPadding(new Insets(8,20,0,15));
             }
             else if (button.getText().isEmpty()) {
-                 Image icon = new Image(new File("resources/img/icons/icon.png").toURI().toString());
+                 Image icon = new Image(TitleBar.class.getResourceAsStream("/resources/img/icons/icon.png"));
                     
                 ImageView iconView = new ImageView(icon);
                 iconView.setFitWidth(20);
@@ -46,7 +45,7 @@ public class TitleBar extends HBox {
             } else {
                 button.setPadding(new Insets(8, 20, 0, 0));
             }
-            Font customFont = Font.loadFont(new File("resources/font/OCR-A.ttf").toURI().toString(), 12);
+            Font customFont = Font.loadFont(TitleBar.class.getResourceAsStream("/resources/font/OCR-A.ttf"), 12);
             button.setFont(customFont);
         });
 

@@ -1,6 +1,6 @@
 package com.crystalpixel.application.window;
 
-import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.stream.Stream;
@@ -143,12 +143,12 @@ public class MainWindow extends Application {
         });
 
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image(new File("resources/img/icons/icon.png").toURI().toString()));
+        primaryStage.getIcons().add(new Image(MainWindow.class.getResourceAsStream("/resources/img/icons/icon.png")));
         primaryStage.show();
     }
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 }
 

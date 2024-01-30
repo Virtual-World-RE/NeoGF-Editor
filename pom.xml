@@ -20,6 +20,15 @@
     </properties>
 
     <build>
+        <resources>
+            <resource>
+                <directory>resources</directory>
+                <targetPath>resources</targetPath>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
         <sourceDirectory>src/</sourceDirectory>
         <plugins>
             <plugin>
