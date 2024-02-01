@@ -1,6 +1,5 @@
 package com.crystalpixel.application.window;
 
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.stream.Stream;
@@ -8,9 +7,11 @@ import java.util.stream.Stream;
 import com.goxr3plus.fxborderlessscene.borderless.BorderlessScene;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -18,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -60,7 +62,7 @@ public class MainWindow extends Application {
 
         tabBox = new VBox();
         tabBox.setStyle("-fx-background-color: #202529;");
-        tabBox.setPrefSize(scene.getWidth() - rectangle2.getWidth() - 335, 20);
+        tabBox.setPrefSize(scene.getWidth() - rectangle2.getWidth() - 335, 25);
 
         currentTab = new HBox();
 
@@ -70,34 +72,44 @@ public class MainWindow extends Application {
 
         HBox activeBar = new HBox();
 
-        ButtonList byButton = new ButtonList(new Button("Main Window"), new Button("+"));
-        byButton.customizeButton();
+        PaneList panes = new PaneList(new StackPane(new Label("Main Window")), new StackPane(new Label("+")));
 
-        Stream.of(byButton.getButtons().stream()).flatMap(buttonStream -> buttonStream).forEach(button -> {
-            button.setPrefHeight(19);
-            tabs.getChildren().add(button);
-            StackPane  pane = new StackPane ();
-            pane.setUserData(button);
-            activeBar.getChildren().add(pane);
+        Stream.of(panes.getStackPanes().stream()).flatMap(paneStream -> paneStream).forEach(pane -> {
+            pane.setPrefHeight(19);
+            Label label = getLabelFromPane(pane);
+            Font customFont = Font.loadFont(this.getClass().getResourceAsStream("/font/OCR-A.ttf"), 10);
+            label.setPadding(new Insets(8, 20, 8, 20));
+            label.setFont(customFont);
+            label.setTextFill(Color.WHITE);
+            label.setAlignment(Pos.CENTER);
+            tabs.getChildren().add(pane);
+            StackPane  Spane = new StackPane ();
+            Spane.setUserData(pane);
+            activeBar.getChildren().add(Spane);
 
-            if (button.getText().equals("+")) {
-                button.setOnAction(event -> {
+            if (label.getText().equals("+")) {
+                pane.setOnMouseClicked(event -> {
                     int index = tabs.getChildren().size() - 1;
-                    Button newButton = new Button("New Button");
-                    newButton.setTextFill(Color.WHITE);
-                    newButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 12px; -fx-background-radius: 0;");
+                    StackPane newButton = new StackPane(new Label("New Button"));
+                    Label labelnew = getLabelFromPane(newButton);
+                    labelnew.setPadding(new Insets(5, 20, 5, 20));
+                    labelnew.setFont(customFont);
+                    labelnew.setTextFill(Color.WHITE);
+                    labelnew.setAlignment(Pos.CENTER);
                     tabs.getChildren().add(index, newButton);
                 });
             } else {
-                button.setOnAction(event -> {
-                    String buttonText = button.getText();
-                    switch (buttonText) {
+                pane.setOnMouseClicked(event -> {
+                    String paneText = label.getText();
+                    switch (paneText) {
                         case "Main Window":
                         for (Node node : activeBar.getChildren()) {
                             StackPane indicator = (StackPane ) node;
-                            if (indicator.getUserData() == button) {
-                                button.setStyle("-fx-background-color: #343B43; -fx-background-radius: 0; -fx-margin: 0; -fx-border-width: 0;");
-                                indicator.setPrefSize(button.getWidth() - 1, 1);
+                            if (indicator.getUserData() == pane) {
+                                System.out.println("Yes");
+                                pane.setStyle("-fx-background-color: #343B43;");
+                                label.setFont(customFont);
+                                indicator.setPrefSize(pane.getWidth(), 1);
                                 indicator.setStyle("-fx-background-color: #EC407A; -fx-margin: 0; -fx-border-width: 0;");
                             } else {
                                 
@@ -143,8 +155,17 @@ public class MainWindow extends Application {
         });
 
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image(MainWindow.class.getResourceAsStream("/resources/img/icons/icon.png")));
+        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/img/Icons/icon.png")));
         primaryStage.show();
+    }
+
+    private Label getLabelFromPane(Pane pane) {
+        for (Node node : pane.getChildren()) {
+            if (node instanceof Label) {
+                return (Label) node;
+            }
+        }
+        return null; // Retourne null si aucun Label n'est trouvé dans le Pane
     }
 
     public static void main(String[] args) {

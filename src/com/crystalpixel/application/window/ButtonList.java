@@ -1,8 +1,6 @@
 package com.crystalpixel.application.window;
 
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -49,18 +47,6 @@ public class ButtonList extends AbstractList<Button> {
         for (Button button : this.buttons) {
             button.setTextFill(Color.WHITE);
             button.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 12px; -fx-background-radius: 0; -fx-background-radius: 0");
-        }
-    }
-
-    public void createImageButton() {
-        for (int i = 0; i < buttons.size(); i++) {
-            Button button = buttons.get(i);
-            int position = i;
-            switch (position) {
-                case 0:
-                    Image image = new Image(ButtonList.class.getResourceAsStream("/resources/img/icons/NewFile.png"));
-                    button.setGraphic(new ImageView(image));
-            }
         }
     }
 
