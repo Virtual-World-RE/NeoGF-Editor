@@ -42,7 +42,8 @@ public class StoryUtils {
     public static Battle readBattle(int startAddress) throws IOException {
         ByteBuffer buffer = Utils.seekRaf(startAddress, new byte[48]);
         return new Battle(Arrays.asList(getOpponent(buffer.getShort(0x0)), getOpponent(buffer.getShort(0x2)),
-                getOpponent(buffer.getShort(0x4)), getOpponent(buffer.getShort(0x6)), getOpponent(buffer.getShort(0x8))), 
+                getOpponent(buffer.getShort(0x4)), getOpponent(buffer.getShort(0x6)),
+                getOpponent(buffer.getShort(0x8))),
                 new Position(buffer.getFloat(0xC), buffer.getFloat(0x10), buffer.getFloat(0x14)),
                 new Position(buffer.getFloat(0x18), buffer.getFloat(0x1C), buffer.getFloat(0x20)),
                 buffer.get(0x24) & 0xFF, buffer.get(0x25) & 0xFF, buffer.getShort(0x26) & 0xFFFF,
@@ -138,82 +139,42 @@ public class StoryUtils {
             int slot2 = byteBuffer.getShort(0x6) & 0xffff;
             int eventType = byteBuffer.get(0xa) & 0xff;
             startAddress += magic.length;
-            MissionEvent missionEvent;
             switch (eventType) {
                 case 0x70:
                 case 0x71:
                     continue;
                 case 0x72: {
-                    Music music = Music.get(byteBuffer.get(0xb));
-                    missionEvent = new MusicEvent(timer1, timer2, slot1, slot2);
-                    ((MusicEvent) missionEvent).setMusic(music);
+                    missionEvents.add(new MusicEvent(timer1, timer2, slot1, slot2, Music.get(byteBuffer.get(0xb))));
                     break;
                 }
                 case 0x73: {
-                    BorgSpecies borgSpecies = BorgSpecies.getBorgSpecies(byteBuffer.getShort(0x8) & 0xffff);
-                    boolean pause = byteBuffer.get(0xb) == 1;
-                    int joint = byteBuffer.get(0x10);
-                    float distance = byteBuffer.getFloat(0x14);
-                    float duration = byteBuffer.getFloat(0x18);
-                    missionEvent = new FocusEvent(timer1, timer2, slot1, slot2);
-                    ((FocusEvent) missionEvent).setBorgSpecies(borgSpecies);
-                    ((FocusEvent) missionEvent).setPause(pause);
-                    ((FocusEvent) missionEvent).setJoint(joint);
-                    ((FocusEvent) missionEvent).setDistance(distance);
-                    ((FocusEvent) missionEvent).setDuration(duration);
+                    missionEvents.add(new FocusEvent(timer1, timer2, slot1, slot2,
+                            BorgSpecies.getBorgSpecies(byteBuffer.getShort(0x8) & 0xffff), byteBuffer.get(0xb) == 1,
+                            byteBuffer.get(0x10), byteBuffer.getFloat(0x14), byteBuffer.getFloat(0x18)));
                     break;
                 }
                 case 0x74: {
-                    Commander commander = Commander.get(byteBuffer.get(0xb) & 0xff);
-                    int voice = byteBuffer.get(0xc) & 0xff;
-                    boolean visible = byteBuffer.get(0xd) == 1;
-                    boolean queue = byteBuffer.get(0xe) == 1;
-                    missionEvent = new SpeechEvent(timer1, timer2, slot1, slot2);
-                    ((SpeechEvent) missionEvent).setCommander(commander);
-                    ((SpeechEvent) missionEvent).setSound(voice);
-                    ((SpeechEvent) missionEvent).setVisible(visible);
-                    ((SpeechEvent) missionEvent).setQueue(queue);
+                    missionEvents.add(
+                            new SpeechEvent(timer1, timer2, slot1, slot2, Commander.get(byteBuffer.get(0xb) & 0xff),
+                                    byteBuffer.get(0xc) & 0xff, byteBuffer.get(0xd) == 1, byteBuffer.get(0xe) == 1));
                     break;
                 }
                 case 0x75:
                 case 0x76: {
-                    Commander commander = Commander.get(byteBuffer.get(0xb) & 0xff);
-                    boolean mute = eventType == 0x76;
-                    missionEvent = new VoiceEvent(timer1, timer2, slot1, slot2);
-                    ((VoiceEvent) missionEvent).setCommander(commander);
-                    ((VoiceEvent) missionEvent).setMute(mute);
+                    missionEvents.add(new VoiceEvent(timer1, timer2, slot1, slot2,
+                            Commander.get(byteBuffer.get(0xb) & 0xff), true));
                     break;
                 }
                 default: {
-                    int id = byteBuffer.getShort(0x8) & 0xffff;
-                    Commander commander = Commander.get(byteBuffer.get(0xb) & 0xff);
-                    int voiceListIndex = byteBuffer.get(0xc) >> 4;
-                    int difficulty = byteBuffer.get(0xc) & 0xf;
-                    int stationary = byteBuffer.get(0xd) & 0xff;
-                    int intelligence = byteBuffer.get(0xe) & 0xff;
-                    boolean channel = byteBuffer.get(0xf) == 1;
-                    boolean boss = byteBuffer.get(0x10) == 1;
-                    int rotation = byteBuffer.get(0x11) & 0xf8;
-                    int entrance = byteBuffer.get(0x11) & 0x3;
-                    float x = byteBuffer.getFloat(0x14);
-                    float y = byteBuffer.getFloat(0x18);
-                    float z = byteBuffer.getFloat(0x1c);
-                    missionEvent = new SpawnEvent(timer1, timer2, slot1, slot2);
-                    ((SpawnEvent) missionEvent).setId(id);
-                    ((SpawnEvent) missionEvent).setLevel(eventType);
-                    ((SpawnEvent) missionEvent).setCommander(commander);
-                    ((SpawnEvent) missionEvent).setVoiceListIndex(voiceListIndex);
-                    ((SpawnEvent) missionEvent).setDifficulty(difficulty);
-                    ((SpawnEvent) missionEvent).setStationary(stationary);
-                    ((SpawnEvent) missionEvent).setIntelligence(intelligence);
-                    ((SpawnEvent) missionEvent).setChannelBoolean(channel);
-                    ((SpawnEvent) missionEvent).setBoss(boss);
-                    ((SpawnEvent) missionEvent).setRotation(rotation);
-                    ((SpawnEvent) missionEvent).setEntrance(entrance);
-                    ((SpawnEvent) missionEvent).setPosition(new Position(x, y, z));
+                    missionEvents.add(new SpawnEvent(timer1, timer2, slot1, slot2,
+                            byteBuffer.getShort(0x8) & 0xffff, eventType, Commander.get(byteBuffer.get(0xb) & 0xff),
+                            byteBuffer.get(0xc) >> 4, byteBuffer.get(0xc) & 0xf, byteBuffer.get(0xd) & 0xff,
+                            byteBuffer.get(0xe) & 0xff, byteBuffer.get(0xf) == 1, byteBuffer.get(0x10) == 1,
+                            byteBuffer.get(0x11) & 0xf8, byteBuffer.get(0x11) & 0x3, new Position(
+                                    byteBuffer.getFloat(0x14), byteBuffer.getFloat(0x18), byteBuffer.getFloat(0x1c))));
+                    break;
                 }
             }
-            missionEvents.add(missionEvent);
         }
         return missionEvents;
     }

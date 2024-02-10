@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import com.crystalpixel.neogfutils.annotation.NotNull;
 import com.crystalpixel.neogfutils.battle.entity.Commander;
 import com.crystalpixel.neogfutils.battle.entity.Position;
+
 public class SpawnEvent extends MissionEvent {
 
     private int id;
@@ -22,6 +23,24 @@ public class SpawnEvent extends MissionEvent {
 
     public SpawnEvent(int timer1, int timer2, int slot1, int slot2) {
         super(timer1, timer2, slot1, slot2);
+    }
+
+    public SpawnEvent(int timer1, int timer2, int slot1, int slot2, int id, int level, Commander commander,
+            int voiceListIndex, int difficulty, int stationary, int intelligence, boolean channelBoolean,
+            boolean boss, int rotation, int entrance, Position position) {
+        super(timer1, timer2, slot1, slot2);
+        this.id = id;
+        this.level = level;
+        this.commander = commander;
+        this.voiceListIndex = voiceListIndex;
+        this.difficulty = difficulty;
+        this.stationary = stationary;
+        this.intelligence = intelligence;
+        this.channelBoolean = channelBoolean;
+        this.boss = boss;
+        this.rotation = rotation;
+        this.entrance = entrance;
+        this.position = position;
     }
 
     public int getId() {

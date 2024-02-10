@@ -10,51 +10,57 @@ import com.crystalpixel.neogfutils.utils.Utils;
 
 public class TextUtils {
 
-    public static final int STORY_TEXT_START_ADDRESS = 0x8F33C0;
-    private static Map<Integer, String> storyTextMap = new HashMap<>();
+    private static final int STORY_TEXT_START_ADDRESS = 0x8F33C0;
+    private static final Map<Integer, String> storyTextMap = new HashMap<>();
 
-    public static int getTextAddress(int index) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
-        raf.seek(STORY_TEXT_START_ADDRESS + index * 4);
-        byte[] magic = new byte[4];
-        raf.readFully(magic);
-        return ByteBuffer.wrap(magic).asIntBuffer().get();
+    public static String getStoryText(int index) throws IOException {
+        if (!storyTextMap.containsKey(index)) {
+            storyTextMap.put(index, readText(getTextAddress(index)));
+        }
+        return storyTextMap.get(index);
     }
 
-    public static String readText(int startAddress) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
-        raf.seek(6 + startAddress & 0x00FFFFFF);
-        StringBuilder text = new StringBuilder();
-        while (true) {
-            byte[] magic = new byte[2];
+    private static int getTextAddress(int index) throws IOException {
+        try (RandomAccessFile raf = Utils.getRaf()) {
+            raf.seek(STORY_TEXT_START_ADDRESS + index * 4);
+            byte[] magic = new byte[4];
             raf.readFully(magic);
-            ByteBuffer byteBuffer = ByteBuffer.wrap(magic);
-            int halfword = byteBuffer.getShort() & 0xFFFF;
-            if (halfword == 0x1001) break;
-            if (halfword == 0x1000) {
-                text.append('\n');
-                continue;
-            }
-            int type = halfword & 0xF000;
-            if (type == 0x8000) {
-                // apply colour
-                int effect = halfword & 0x7FFF;
-                switch (effect) {
-                    case 0: text.append("[Player]"); break;
-                    case 2: raf.readFully(magic); break;
-                    case 1:
-                    case 3: break;
+            return ByteBuffer.wrap(magic).getInt();
+        }
+    }
+
+    private static String readText(int startAddress) throws IOException {
+        try (RandomAccessFile raf = Utils.getRaf()) {
+            raf.seek(6 + startAddress & 0x00FFFFFF);
+            StringBuilder text = new StringBuilder();
+            while (true) {
+                byte[] magic = new byte[2];
+                raf.readFully(magic);
+                int halfword = ByteBuffer.wrap(magic).getShort() & 0xFFFF;
+                if (halfword == 0x1001) break;
+                if (halfword == 0x1000) {
+                    text.append('\n');
+                    continue;
+                }
+                int type = halfword & 0xF000;
+                if (type == 0x8000) {
+                    // apply colour
+                    int effect = halfword & 0x7FFF;
+                    switch (effect) {
+                        case 0: text.append("[Player]"); break;
+                        case 2: raf.readFully(magic); break;
+                        case 1:
+                        case 3: break;
+                    }
+                } else if (type == 0xF000) {
+                    if (halfword == 0xFFFD) {}
+                    text.append(' ');
+                } else {
+                    text.append(getStoryTextChar(halfword & 0x7FFF));
                 }
             }
-            else if (type == 0xF000) {
-                if (halfword == 0xFFFD) {}
-                text.append(' ');
-            }
-            else {
-                text.append(getStoryTextChar(halfword & 0x7FFF));
-            }
+            return text.toString().trim();
         }
-        return text.toString().trim();
     }
 
     private static char getStoryTextChar(int index) {
@@ -75,14 +81,7 @@ public class TextUtils {
                 'Ç', 'Æ', 'ß', 'ñ', 'ç', 'æ', '¿', '¡', 'Œ', 'œ',
                 '”'
         };
-        return textChars.length > index ? textChars[index] : ' ';
-    }
-
-    public static String getStoryText(int index) throws IOException {
-        if (!storyTextMap.containsKey(index)) {
-            storyTextMap.put(index, readText(getTextAddress(index)));
-        }
-        return storyTextMap.get(index);
+        return index < textChars.length ? textChars[index] : ' ';
     }
 
     private static char getBorgTextChar(int index) {

@@ -16,6 +16,15 @@ public class FocusEvent extends MissionEvent {
         super(timer1, timer2, slot1, slot2);
     }
 
+    public FocusEvent(int timer1, int timer2, int slot1, int slot2, BorgSpecies borgSpecies, boolean pause, int joint, float distance, float duration) {
+        super(timer1, timer2, slot1, slot2);
+        this.borgSpecies = borgSpecies;
+        this.pause = pause;
+        this.joint = joint;
+        this.distance = distance;
+        this.duration = duration;
+    }
+
     public BorgSpecies getBorgSpecies() {
         return borgSpecies;
     }

@@ -20,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -62,7 +63,7 @@ public class MainWindow extends Application {
 
         tabBox = new VBox();
         tabBox.setStyle("-fx-background-color: #202529;");
-        tabBox.setPrefSize(scene.getWidth() - rectangle2.getWidth() - 335, 25);
+        tabBox.setPrefSize(scene.getWidth() - rectangle2.getWidth() - 335, 26);
 
         currentTab = new HBox();
 
@@ -75,10 +76,10 @@ public class MainWindow extends Application {
         PaneList panes = new PaneList(new StackPane(new Label("Main Window")), new StackPane(new Label("+")));
 
         Stream.of(panes.getStackPanes().stream()).flatMap(paneStream -> paneStream).forEach(pane -> {
-            pane.setPrefHeight(19);
+            pane.setMaxHeight(19);
             Label label = getLabelFromPane(pane);
-            Font customFont = Font.loadFont(this.getClass().getResourceAsStream("/font/OCR-A.ttf"), 10);
-            label.setPadding(new Insets(8, 20, 8, 20));
+            Font customFont = Font.font("Consolas", FontPosture.REGULAR, 10);
+            label.setPadding(new Insets(6, 20, 6, 20));
             label.setFont(customFont);
             label.setTextFill(Color.WHITE);
             label.setAlignment(Pos.CENTER);
@@ -96,6 +97,21 @@ public class MainWindow extends Application {
                     labelnew.setFont(customFont);
                     labelnew.setTextFill(Color.WHITE);
                     labelnew.setAlignment(Pos.CENTER);
+                    Spane.setUserData(newButton);
+                    newButton.setOnMouseClicked(newEvent -> {
+                        for (Node node : activeBar.getChildren()) {
+                            StackPane indicator = (StackPane ) node;
+                            pane.setStyle("-fx-background-color: #202529;");
+                            indicator.setStyle("-fx-background-color: transparent;");
+                            if (indicator.getUserData() == newButton) {
+                                System.out.println("No");
+                                pane.setStyle("-fx-background-color: #343B43;");
+                                label.setFont(customFont);
+                                indicator.setPrefSize(pane.getWidth(), 1);
+                                indicator.setStyle("-fx-background-color: #EC407A; -fx-margin: 0; -fx-border-width: 0;");
+                            }
+                        }
+                    });
                     tabs.getChildren().add(index, newButton);
                 });
             } else {
@@ -112,7 +128,8 @@ public class MainWindow extends Application {
                                 indicator.setPrefSize(pane.getWidth(), 1);
                                 indicator.setStyle("-fx-background-color: #EC407A; -fx-margin: 0; -fx-border-width: 0;");
                             } else {
-                                
+                                pane.setStyle("-fx-background-color: #202529;");
+                                indicator.setStyle("-fx-background-color: transparent;");
                             }
                         }
                             break;

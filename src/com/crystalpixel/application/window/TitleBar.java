@@ -1,6 +1,5 @@
 package com.crystalpixel.application.window;
 
-import java.net.URL;
 import java.util.stream.Stream;
 
 import javafx.geometry.Insets;
@@ -9,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 
 public class TitleBar extends HBox {
@@ -33,7 +33,7 @@ public class TitleBar extends HBox {
 
         Stream.of(fileButtons.getButtons().stream()).flatMap(buttonStream -> buttonStream).forEach(button -> {
             if (button.getText().equals("File")) {
-                button.setPadding(new Insets(8,20,0,15));
+                button.setPadding(new Insets(10,20,0,15));
             }
             else if (button.getText().isEmpty()) {
 
@@ -43,11 +43,11 @@ public class TitleBar extends HBox {
                 iconView.setFitWidth(20);
                 iconView.setFitHeight(20); 
                 button.setGraphic(iconView);
-                button.setPadding(new Insets(8, 0, 0, 5));
+                button.setPadding(new Insets(10, 0, 0, 5));
             } else {
-                button.setPadding(new Insets(8, 20, 0, 0));
+                button.setPadding(new Insets(10, 20, 0, 0));
             }
-            Font customFont = Font.loadFont(this.getClass().getResourceAsStream("/font/OCR-A.ttf"), 12);
+            Font customFont = Font.font("Consolas", FontPosture.REGULAR, 12);
             button.setFont(customFont);
         });
 

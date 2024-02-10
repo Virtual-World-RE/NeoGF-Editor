@@ -13,6 +13,11 @@ public class MusicEvent extends MissionEvent {
         super(timer1, timer2, slot1, slot2);
     }
 
+    public MusicEvent(int timer1, int timer2, int slot1, int slot2, Music music) {
+        super(timer1, timer2, slot1, slot2);
+        this.music = music;
+    }
+
     public Music getMusic() {
         return music;
     }

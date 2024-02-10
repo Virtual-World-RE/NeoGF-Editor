@@ -15,6 +15,14 @@ public class SpeechEvent extends MissionEvent {
         super(timer1, timer2, slot1, slot2);
     }
 
+    public SpeechEvent(int timer1, int timer2, int slot1, int slot2, Commander commander, int sound, boolean visible, boolean queue) {
+        super(timer1, timer2, slot1, slot2);
+        this.commander = commander;
+        this.sound = sound;
+        this.visible = visible;
+        this.queue = queue;
+    }
+
     public Commander getCommander() {
         return commander;
     }

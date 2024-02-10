@@ -13,6 +13,12 @@ public class VoiceEvent extends MissionEvent {
         super(timer1, timer2, slot1, slot2);
     }
 
+    public VoiceEvent(int timer1, int timer2, int slot1, int slot2, Commander commander, boolean mute) {
+        super(timer1, timer2, slot1, slot2);
+        this.commander = commander;
+        this.mute = mute;
+    }
+
     public Commander getCommander() {
         return commander;
     }
