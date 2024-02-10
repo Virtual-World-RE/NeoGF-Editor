@@ -110,7 +110,7 @@
              <version>11</version>
          </dependency>
 
-         <dependency>
+        <dependency>
 		    <groupId>org.lwjgl</groupId>
 		    <artifactId>lwjgl</artifactId>
 	    </dependency>

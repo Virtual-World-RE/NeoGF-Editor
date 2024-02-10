@@ -21,6 +21,8 @@ public class ArchiveManager {
         RandomAccessFile raf = new RandomAccessFile(file, "rw");
 
         ByteBuffer buffer = Utils.seekRaf(raf, 0x100, new byte[24]);
+        System.err.println(buffer.getInt(0x0) + "" + buffer.getInt(0x4) + "" + buffer.getInt(0x8) + "" + buffer.getInt(0xC) + "" + 
+        buffer.getInt(0x10) + "" + getVersion(buffer.get(0x14)) + "" + getPad(buffer.getInt(0x18)));
         archive.header = new ArchiveHeader(buffer.getInt(0x0), buffer.getInt(0x4), buffer.getInt(0x8), buffer.getInt(0xC), 
                                            buffer.getInt(0x10), getVersion(buffer.get(0x14)), getPad(buffer.getInt(0x18)));
 
@@ -155,5 +157,9 @@ public class ArchiveManager {
 
         ByteBuffer buffer = Utils.seekRaf(0x0 + index, new byte[2]);
         return new int[] {buffer.getInt(0x0), buffer.getInt(0x4)};
+    }
+
+    public static void main(String[] args) throws IOException {
+        parseArchive(new Archive(), new File("D:/Bordel/GotchaForce/FULL_AFS_FILE_DUMP/ExtractedPzz/pl0000/004C_pl0000.dat"), 16224003);
     }
 }

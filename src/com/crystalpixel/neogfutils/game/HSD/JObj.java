@@ -1,9 +1,9 @@
 package com.crystalpixel.neogfutils.game.HSD;
 
 import com.crystalpixel.neogfutils.utils.math.Quaternion;
-import com.crystalpixel.neogfutils.utils.math.Mtx.Mtx;
-import com.crystalpixel.neogfutils.utils.math.Mtx.MtxPtr;
+import com.crystalpixel.neogfutils.utils.math.Mtx.Matrix4f;
 import com.crystalpixel.neogfutils.utils.math.vector.Vector3f;
+import com.crystalpixel.neogfutils.utils.math.vector.Vector4f;
 
 public class JObj {
     Obj object;
@@ -15,16 +15,16 @@ public class JObj {
     Quaternion rotation;
     Vector3f scale;
     Vector3f translation;
-    Mtx mtx;
+    Matrix4f mtx;
     Vector3f scl;
-    MtxPtr envelopemtx;
+    Matrix4f envelopemtx;
     AObj aobj;
     RObj robj;
     int id;
 
     public JObj(Obj object, JObj next, JObj parent, JObj child, int flags,
                 JObjData data, Quaternion rotation, Vector3f scale, Vector3f translation,
-                Mtx mtx, Vector3f scl, MtxPtr envelopemtx, AObj aobj, RObj robj, int id) {
+                Matrix4f mtx, Vector3f scl, Matrix4f envelopemtx, AObj aobj, RObj robj, int id) {
         this.object = object;
         this.next = next;
         this.parent = parent;

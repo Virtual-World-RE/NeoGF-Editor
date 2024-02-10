@@ -104,6 +104,8 @@ public class Utils {
         return builder.toString();
     }
 
+    
+
     // private List<String> getBattleOptions(int value) {
     // List<String> battleOptions = new ArrayList<>();
     // if ((value & 0x1) != 0) battleOptions.add("Ally GF Energy");

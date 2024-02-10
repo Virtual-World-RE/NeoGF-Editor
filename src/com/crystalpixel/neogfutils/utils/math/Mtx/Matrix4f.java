@@ -266,6 +266,98 @@ public class Matrix4f {
     }
 
     /**
+     * Calculates the inverse of this matrix.
+     * 
+     * @return The inverse of this matrix
+     * @throws IllegalStateException if the matrix is singular (non-invertible)
+     */
+    public Matrix4f inverse() throws IllegalStateException {
+        Matrix4f result = new Matrix4f();
+
+        float s0 = m00 * m11 - m01 * m10;
+        float s1 = m00 * m12 - m02 * m10;
+        float s2 = m00 * m13 - m03 * m10;
+        float s3 = m01 * m12 - m02 * m11;
+        float s4 = m01 * m13 - m03 * m11;
+        float s5 = m02 * m13 - m03 * m12;
+
+        float c5 = m22 * m33 - m23 * m32;
+        float c4 = m21 * m33 - m23 * m31;
+        float c3 = m21 * m32 - m22 * m31;
+        float c2 = m20 * m33 - m23 * m30;
+        float c1 = m20 * m32 - m22 * m30;
+        float c0 = m20 * m31 - m21 * m30;
+
+        // Calculate the determinant
+        float det = s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0;
+        if (det == 0) {
+            // Matrix is not invertible
+            throw new IllegalStateException("Matrix is not invertible");
+        }
+
+        // Inverse of determinant
+        float invDet = 1.0f / det;
+
+        // Calculate inverse matrix elements
+        result.m00 = (m11 * c5 - m12 * c4 + m13 * c3) * invDet;
+        result.m01 = (-m01 * c5 + m02 * c4 - m03 * c3) * invDet;
+        result.m02 = (m31 * s5 - m32 * s4 + m33 * s3) * invDet;
+        result.m03 = (-m21 * s5 + m22 * s4 - m23 * s3) * invDet;
+        result.m10 = (-m10 * c5 + m12 * c2 - m13 * c1) * invDet;
+        result.m11 = (m00 * c5 - m02 * c2 + m03 * c1) * invDet;
+        result.m12 = (-m30 * s5 + m32 * s2 - m33 * s1) * invDet;
+        result.m13 = (m20 * s5 - m22 * s2 + m23 * s1) * invDet;
+        result.m20 = (m10 * c4 - m11 * c2 + m13 * c0) * invDet;
+        result.m21 = (-m00 * c4 + m01 * c2 - m03 * c0) * invDet;
+        result.m22 = (m30 * s4 - m31 * s2 + m33 * s0) * invDet;
+        result.m23 = (-m20 * s4 + m21 * s2 - m23 * s0) * invDet;
+        result.m30 = (-m10 * c3 + m11 * c1 - m12 * c0) * invDet;
+        result.m31 = (m00 * c3 - m01 * c1 + m02 * c0) * invDet;
+        result.m32 = (-m30 * s3 + m31 * s1 - m32 * s0) * invDet;
+        result.m33 = (m20 * s3 - m21 * s1 + m22 * s0) * invDet;
+
+        return result;
+    }
+
+    /**
+     * Creates a view matrix based on the position of the eye point, the target
+     * point, and an up vector.
+     *
+     * @param eye    The position of the eye point (camera position)
+     * @param target The position of the target point (what the camera looks at)
+     * @param up     The up vector indicating the orientation of the camera
+     * @return The view matrix
+     */
+    public static Matrix4f lookAt(Vector3f eye, Vector3f target, Vector3f up) {
+        // Compute forward direction
+        Vector3f forward = target.subtract(eye).normalize();
+
+        // Compute side direction
+        Vector3f side = forward.cross(up).normalize();
+
+        // Compute up direction
+        Vector3f newUp = side.cross(forward);
+
+        // Construct the view matrix
+        Matrix4f viewMatrix = new Matrix4f();
+        viewMatrix.m00 = side.getX();
+        viewMatrix.m10 = side.getY();
+        viewMatrix.m20 = side.getZ();
+        viewMatrix.m01 = newUp.getX();
+        viewMatrix.m11 = newUp.getY();
+        viewMatrix.m21 = newUp.getZ();
+        viewMatrix.m02 = -forward.getX();
+        viewMatrix.m12 = -forward.getY();
+        viewMatrix.m22 = -forward.getZ();
+        viewMatrix.m03 = -side.dot(eye);
+        viewMatrix.m13 = -newUp.dot(eye);
+        viewMatrix.m23 = forward.dot(eye);
+        viewMatrix.m33 = 1;
+
+        return viewMatrix;
+    }
+
+    /**
      * Stores the matrix in a given Buffer.
      *
      * @param buffer The buffer to store the matrix data
