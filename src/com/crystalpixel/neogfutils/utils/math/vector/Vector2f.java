@@ -1,13 +1,13 @@
 package com.crystalpixel.neogfutils.utils.math.vector;
 
-public class Vect2 {
+public class Vector2f {
     public float x, y;
 
-    public Vect2() {
+    public Vector2f() {
         this(0,0);
     }
 
-    public Vect2(float x, float y) {
+    public Vector2f(float x, float y) {
         this.x = x;
         this.y = y;
     }

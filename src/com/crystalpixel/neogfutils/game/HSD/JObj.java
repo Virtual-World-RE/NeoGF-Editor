@@ -3,7 +3,6 @@ package com.crystalpixel.neogfutils.game.HSD;
 import com.crystalpixel.neogfutils.utils.math.Quaternion;
 import com.crystalpixel.neogfutils.utils.math.Mtx.Matrix4f;
 import com.crystalpixel.neogfutils.utils.math.vector.Vector3f;
-import com.crystalpixel.neogfutils.utils.math.vector.Vector4f;
 
 public class JObj {
     Obj object;
@@ -44,10 +43,10 @@ public class JObj {
 
     protected void JObjCheckDepend() {
 
-        if (!HSD_JObjMtxIsDirty(this)) {
+        if (!JObjMtxIsDirty(this)) {
             if ((this.flags & JObjFlags.USER_DEFINED_MTX.getValue()) != 0) {
                 if ((this.flags & JObjFlags.MTX_INDEPEND_PARENT.getValue()) == 0 &&
-                    this.parent != null && HSD_JObjMtxIsDirty(this.parent))
+                    this.parent != null && JObjMtxIsDirty(this.parent))
                 {
                     this.flags |= JObjFlags.MTX_DIRTY.getValue();
                 }
@@ -63,11 +62,11 @@ public class JObj {
         }
     }
 
-    public static Vector4f toVector4f(GXColor4 v) {
-        return new Vector4f(v.R / 255f, v.G / 255f, v.B / 255f, v.A / 255f);
-    }
-
-    private boolean HSD_JObjMtxIsDirty(JObj jObj) {
+    private boolean JObjMtxIsDirty(JObj jObj) {
+        if ((this.flags & JObjFlags.USER_DEFINED_MTX.getValue()) == 0 
+            && (this.flags & JObjFlags.MTX_DIRTY.getValue()) !=0) {
+            return true;
+        }
         return false;
     }
 }

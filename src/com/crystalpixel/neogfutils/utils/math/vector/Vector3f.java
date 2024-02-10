@@ -3,7 +3,7 @@ package com.crystalpixel.neogfutils.utils.math.vector;
 import java.nio.FloatBuffer;
 
 public class Vector3f {
-    private float x, y, z;
+    public float x, y, z;
 
     public Vector3f() {
         this(0,0,0);
