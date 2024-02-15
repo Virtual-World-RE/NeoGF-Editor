@@ -44,5 +44,39 @@ public enum JObjFlags {
     public int getValue() {
         return value;
     }
+
+    static JObjFlags valueOf(int value) {
+        for (JObjFlags flag : JObjFlags.values()) {
+            if (flag.getValue() == value) {
+                return flag;
+            }
+        }
+        throw new IllegalArgumentException("Invalid JObjFlags value: " + value);
+    }
+
+    public boolean contains(JObjFlags... flagsToCheck) {
+        for (JObjFlags flag : flagsToCheck) {
+            if ((this.value & flag.getValue()) != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    JObjFlags remove(JObjFlags... flags) {
+        int result = this.value;
+        for (JObjFlags flag : flags) {
+            result &= ~flag.getValue();
+        }
+        return JObjFlags.valueOf(result);
+    }
+
+    public JObjFlags add(JObjFlags... flagsToAdd) {
+        int result = this.value;
+        for (JObjFlags flag : flagsToAdd) {
+            result |= flag.getValue();
+        }
+        return JObjFlags.valueOf(result);
+    }
 }
 
