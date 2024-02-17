@@ -8,13 +8,17 @@ import com.crystalpixel.neogfutils.utils.math.DynamicByteBuffer;
 public class Accessor {
     public DynamicByteBuffer _s;
 
-    public int trimmedSize = -1;
+    protected int trimmedSize = -1;
 
     public Accessor() {
+        init();
+    }
+
+    protected void init() {
         if (trimmedSize != -1) {
-            _s = new DynamicByteBuffer(new byte[trimmedSize]);
+            _s = new DynamicByteBuffer(trimmedSize);
         } else {
-            _s = new DynamicByteBuffer(new byte[0]);
+            _s = new DynamicByteBuffer(0);
         }
     }
 

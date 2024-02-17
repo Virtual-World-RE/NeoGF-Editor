@@ -1,5 +1,9 @@
 package com.crystalpixel.neogfutils.game.HSD;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public enum JObjFlags {
     NULL(0x00000000),
     SKELETON(0x00000001),
@@ -34,13 +38,13 @@ public enum JObjFlags {
     ROOT_OPA(0x10000000),
     ROOT_XLU(0x20000000),
     ROOT_TEXEDGE(0x40000000);
-    
+
     private final int value;
-    
+
     JObjFlags(int value) {
         this.value = value;
     }
-    
+
     public int getValue() {
         return value;
     }
@@ -63,6 +67,35 @@ public enum JObjFlags {
         return true;
     }
 
+    public static boolean contains(JObjFlags[] flags, JObjFlags... flag) {
+        for (JObjFlags f : flags) {
+            for (JObjFlags singleFlag : flag) {
+                if (f == singleFlag) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void add(JObjFlags[] flags, JObjFlags... flagsToAdd) {
+        List<JObjFlags> flagsList = new ArrayList<>(Arrays.asList(flags));
+        for (JObjFlags flag : flagsToAdd) {
+            if (!flagsList.contains(flag)) {
+                flagsList.add(flag);
+            }
+        }
+        flags = flagsList.toArray(new JObjFlags[0]);
+    }    
+
+    public static void remove(JObjFlags[] flags, JObjFlags... flagsToRemove) {
+        List<JObjFlags> flagsList = new ArrayList<>(Arrays.asList(flags));
+        for (JObjFlags flag : flagsToRemove) {
+            flagsList.remove(flag);
+        }
+        flags = flagsList.toArray(new JObjFlags[0]);
+    }
+
     JObjFlags remove(JObjFlags... flags) {
         int result = this.value;
         for (JObjFlags flag : flags) {
@@ -74,9 +107,11 @@ public enum JObjFlags {
     public JObjFlags add(JObjFlags... flagsToAdd) {
         int result = this.value;
         for (JObjFlags flag : flagsToAdd) {
-            result |= flag.getValue();
+            if ((result & flag.getValue()) == 0) {
+                result |= flag.getValue();
+            }
         }
         return JObjFlags.valueOf(result);
     }
+    
 }
-

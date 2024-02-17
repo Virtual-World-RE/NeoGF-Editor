@@ -76,7 +76,6 @@ public class DynamicByteBuffer {
     }
 
     public void setInt(int index, int value) {
-        ensureCapacity(index + 4);
         buffer[index] = (byte) (value >> 24);
         buffer[index + 1] = (byte) (value >> 16);
         buffer[index + 2] = (byte) (value >> 8);
@@ -92,21 +91,20 @@ public class DynamicByteBuffer {
         return value;
     }
 
-    public float getFloat(int offset) {
-        int intBits = getInt(offset);
+    public float getFloat(int index) {
+        int intBits = getInt(index);
         return Float.intBitsToFloat(intBits);
     }
-
-    public void setFloat(int offset, float value) {
+    
+    public void setFloat(int index, float value) {
         int intBits = Float.floatToIntBits(value);
-        setInt(offset, intBits);
-    }
+        setInt(index, intBits);
+    }    
 
     public void setString(int index, String value) {
         byte[] stringBytes = value.getBytes(StandardCharsets.UTF_8);
-        setInt(index, stringBytes.length);
-        ensureCapacity(index + 4 + stringBytes.length);
         System.arraycopy(stringBytes, 0, buffer, index + 4, stringBytes.length);
+        setInt(index, stringBytes.length);
     }
 
     public String getString(int index) {
