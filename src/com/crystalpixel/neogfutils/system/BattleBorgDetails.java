@@ -52,7 +52,7 @@ public class BattleBorgDetails {
     }
 
     public static String getShiftJIS() throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+        RandomAccessFile raf = Utils.getDolRaf();
         int nameAddress = 0x8F3268;
         byte[] magic = new byte[2];
         raf.seek(0xFFFFFF & nameAddress);

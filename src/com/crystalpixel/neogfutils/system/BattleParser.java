@@ -80,7 +80,7 @@ public class BattleParser {
     }
 
     private void makeShiftCode(int startAddress, int offset, int size) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+        RandomAccessFile raf = Utils.getDolRaf();
         byte[] magic = new byte[4];
         while (size > 0) {
             raf.seek(startAddress & 0x00FFFFFF);
@@ -168,14 +168,14 @@ public class BattleParser {
         ByteBuffer byteBuffer;
         List<Condition> conditionList = new ArrayList<>();
         while (true) {
-            byteBuffer = Utils.seekRaf(startAddress, new byte[2]);
+            byteBuffer = Utils.seekDolRaf(startAddress, new byte[2]);
             int parameterCount = byteBuffer.get() & 0xFF;
             int conditionType = byteBuffer.get() & 0xFF;
             startAddress += 2;
             if (conditionType == 0x2e) break;
             List<Integer> parameterList = new ArrayList<>();
             for (int i = 0; i < parameterCount; i++) {
-                byteBuffer = Utils.seekRaf(startAddress, new byte[2]);
+                byteBuffer = Utils.seekDolRaf(startAddress, new byte[2]);
                 parameterList.add(byteBuffer.getShort() & 0xffff);
                 startAddress += 2;
             }

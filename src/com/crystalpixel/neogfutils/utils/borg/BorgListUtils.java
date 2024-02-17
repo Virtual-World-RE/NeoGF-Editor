@@ -27,17 +27,17 @@ public class BorgListUtils {
 
     // Returns an address containing an array of borg ids for a given index.
     private static int getBorgListAddress(int startAddress, int index) throws IOException {
-        return Utils.seekRaf(startAddress + index * 4, new byte[4]).asIntBuffer().get();
+        return Utils.seekDolRaf(startAddress + index * 4, new byte[4]).asIntBuffer().get();
     }
 
     // Returns a list of borg species for a given start address.
     private static List<BorgSpecies> getBorgList(int startAddress) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+        RandomAccessFile raf = Utils.getDolRaf();
         ByteBuffer byteBuffer;
         byte[] magic = new byte[2];
         List<BorgSpecies> borgSpeciesList = new ArrayList<>();
         while (true) {
-            byteBuffer = Utils.seekRaf(raf, startAddress, magic);
+            byteBuffer = Utils.seekDolRaf(raf, startAddress, magic);
             int borgId = byteBuffer.getShort();
             if (borgId == -1) break;
             borgSpeciesList.add(BorgSpecies.getBorgSpecies(borgId));

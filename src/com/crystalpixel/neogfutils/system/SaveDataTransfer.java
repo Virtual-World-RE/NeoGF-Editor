@@ -41,7 +41,7 @@ public class SaveDataTransfer {
     }
 
     private List<Borg> getGotchaBoxBorgList(int startAddress) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+        RandomAccessFile raf = Utils.getDolRaf();
         byte[] magic = new byte[32];
         raf.seek(0xffffff & startAddress);
         raf.readFully(magic);
@@ -71,7 +71,7 @@ public class SaveDataTransfer {
     }
 
     private List<Borg> getWarehouseBorgList(int startAddress) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+        RandomAccessFile raf = Utils.getDolRaf();
         byte[] magic = new byte[16];
         raf.seek(0xffffff & startAddress);
         raf.readFully(magic);
@@ -101,7 +101,7 @@ public class SaveDataTransfer {
     }
 
     private List<DataCrystal> getDataCrystalList(int startAddress) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+        RandomAccessFile raf = Utils.getDolRaf();
         byte[] magic = new byte[12];
         raf.seek(0xffffff & startAddress);
         raf.readFully(magic);

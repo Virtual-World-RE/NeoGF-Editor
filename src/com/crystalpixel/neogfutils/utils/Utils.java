@@ -22,6 +22,7 @@ public class Utils {
     private static final int DATA_ADDRESS_LIMIT = 0xffffff;
     private static final int DATA_OFFSET_MASK = 0x7fffffff;
 
+    // returns the physical address from the virtual address provided.
     public static Integer getOffsetForDataAddress(int address) throws IOException {
         if (dataSectionMap.isEmpty()) {
             populateDataSectionMap();
@@ -35,10 +36,10 @@ public class Utils {
     }
 
     private static void populateDataSectionMap() throws IOException {
-        try (RandomAccessFile raf = getRaf()) {
+        try (RandomAccessFile raf = getDolRaf()) {
             for (int i = 0; i <= DATA_SECTION_COUNT; i++) {
-                int dataOffset = seekRaf(raf, DATA_OFFSET_START + i * DATA_SECTION_ENTRY_SIZE, new byte[4]).getInt();
-                int dataAddress = seekRaf(raf, DATA_ADDRESS_START + i * DATA_SECTION_ENTRY_SIZE, new byte[4]).getInt();
+                int dataOffset = seekDolRaf(raf, DATA_OFFSET_START + i * DATA_SECTION_ENTRY_SIZE, new byte[4]).getInt();
+                int dataAddress = seekDolRaf(raf, DATA_ADDRESS_START + i * DATA_SECTION_ENTRY_SIZE, new byte[4]).getInt();
                 if (dataOffset > 0 && dataAddress < 0) {
                     dataSectionMap.put(dataAddress, dataOffset);
                 }
@@ -46,22 +47,30 @@ public class Utils {
         }
     }
 
-    public static RandomAccessFile getRaf() throws FileNotFoundException {
-        URL url = Utils.class.getResource("/boot.dol");
+    public static RandomAccessFile getDolRaf() throws FileNotFoundException {
+        return getRaf("/boot.dol");
+    }
+
+    public static RandomAccessFile getRaf(String filepath) throws FileNotFoundException {
+        URL url = Utils.class.getResource(filepath);
         return new RandomAccessFile(url.getFile(), "rw");
     }
 
-    public static ByteBuffer seekRaf(int address, byte[] magic) throws IOException {
-        try (RandomAccessFile raf = getRaf()) {
-            return seekRaf(raf, address, magic);
+    public static ByteBuffer seekDolRaf(int address, byte[] magic) throws IOException {
+        try (RandomAccessFile raf = getDolRaf()) {
+            return seekDolRaf(raf, address, magic);
         }
     }
 
-    public static ByteBuffer seekRaf(RandomAccessFile raf, int address, byte[] magic) throws IOException {
+    public static ByteBuffer seekDolRaf(RandomAccessFile raf, int address, byte[] magic) throws IOException {
         if ((address & DATA_ADDRESS_MASK) >= 0x100) {
             address -= getOffsetForDataAddress(address);
         }
-        raf.seek(DATA_ADDRESS_LIMIT & address);
+        return seekRaf(raf, (address & DATA_ADDRESS_LIMIT), magic);
+    }
+
+    public static ByteBuffer seekRaf(RandomAccessFile raf, int address, byte[] magic) throws IOException {
+        raf.seek(address & DATA_ADDRESS_MASK);
         raf.readFully(magic);
         return ByteBuffer.wrap(magic);
     }

@@ -20,7 +20,7 @@ public class ArchiveManager {
 
         RandomAccessFile raf = new RandomAccessFile(file, "rw");
 
-        ByteBuffer buffer = Utils.seekRaf(raf, 0x100, new byte[24]);
+        ByteBuffer buffer = Utils.seekDolRaf(raf, 0x100, new byte[24]);
         System.err.println(buffer.getInt(0x0) + "" + buffer.getInt(0x4) + "" + buffer.getInt(0x8) + "" + buffer.getInt(0xC) + "" + 
         buffer.getInt(0x10) + "" + getVersion(buffer.get(0x14)) + "" + getPad(buffer.getInt(0x18)));
         archive.header = new ArchiveHeader(buffer.getInt(0x0), buffer.getInt(0x4), buffer.getInt(0x8), buffer.getInt(0xC), 
@@ -147,7 +147,7 @@ public class ArchiveManager {
         if (index == -1)
         return null;
 
-        ByteBuffer buffer = Utils.seekRaf(0x0 + index, new byte[4]);
+        ByteBuffer buffer = Utils.seekDolRaf(0x0 + index, new byte[4]);
         return new byte[] {buffer.get(0x0), buffer.get(0x1), buffer.get(0x2), buffer.get(0x3)};
     }
 
@@ -155,7 +155,7 @@ public class ArchiveManager {
         if (index == -1)
         return null;
 
-        ByteBuffer buffer = Utils.seekRaf(0x0 + index, new byte[2]);
+        ByteBuffer buffer = Utils.seekDolRaf(0x0 + index, new byte[2]);
         return new int[] {buffer.getInt(0x0), buffer.getInt(0x4)};
     }
 

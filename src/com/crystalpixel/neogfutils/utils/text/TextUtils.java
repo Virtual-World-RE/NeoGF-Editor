@@ -21,7 +21,7 @@ public class TextUtils {
     }
 
     private static int getTextAddress(int index) throws IOException {
-        try (RandomAccessFile raf = Utils.getRaf()) {
+        try (RandomAccessFile raf = Utils.getDolRaf()) {
             raf.seek(STORY_TEXT_START_ADDRESS + index * 4);
             byte[] magic = new byte[4];
             raf.readFully(magic);
@@ -30,7 +30,7 @@ public class TextUtils {
     }
 
     private static String readText(int startAddress) throws IOException {
-        try (RandomAccessFile raf = Utils.getRaf()) {
+        try (RandomAccessFile raf = Utils.getDolRaf()) {
             raf.seek(6 + startAddress & 0x00FFFFFF);
             StringBuilder text = new StringBuilder();
             while (true) {

@@ -28,7 +28,7 @@ public class StoryUtils {
     public static Opponent getOpponent(short index) throws IOException {
         if (index == -1)
             return null;
-        ByteBuffer buffer = Utils.seekRaf(OPPONENT_START_ADDRESS + index * 20, new byte[20]);
+        ByteBuffer buffer = Utils.seekDolRaf(OPPONENT_START_ADDRESS + index * 20, new byte[20]);
         return new Opponent(Commander.get(buffer.get(0)), buffer.get(0x1), buffer.get(0x2) & 0xFF,
                 buffer.get(0x3) & 0xFF, new Position(buffer.getFloat(0x4), buffer.getFloat(0x8), buffer.getFloat(0xC)),
                 buffer.get(0x10) & 0xFF);
@@ -36,11 +36,11 @@ public class StoryUtils {
 
     // Returns an IntBuffer of four pointers, each representing a script's address.
     public static int getBattleConfigurationAddress(int battle) throws IOException {
-        return Utils.seekRaf(BATTLE_CONFIGURATION_START_ADDRESS + battle * 4, new byte[4]).asIntBuffer().get();
+        return Utils.seekDolRaf(BATTLE_CONFIGURATION_START_ADDRESS + battle * 4, new byte[4]).asIntBuffer().get();
     }
 
     public static Battle readBattle(int startAddress) throws IOException {
-        ByteBuffer buffer = Utils.seekRaf(startAddress, new byte[48]);
+        ByteBuffer buffer = Utils.seekDolRaf(startAddress, new byte[48]);
         return new Battle(Arrays.asList(getOpponent(buffer.getShort(0x0)), getOpponent(buffer.getShort(0x2)),
                 getOpponent(buffer.getShort(0x4)), getOpponent(buffer.getShort(0x6)),
                 getOpponent(buffer.getShort(0x8))),
@@ -54,7 +54,7 @@ public class StoryUtils {
     // Returns an IntBuffer of seven words, each representing start addresses for
     // elements of the Battle.
     private static IntBuffer getStoryBattleAddresses(int battle) throws IOException {
-        return Utils.seekRaf(BATTLE_ADDRESSES_START_ADDRESS + battle * 28, new byte[28]).asIntBuffer();
+        return Utils.seekDolRaf(BATTLE_ADDRESSES_START_ADDRESS + battle * 28, new byte[28]).asIntBuffer();
     }
 
     public static int getStoryBattleConfigurationAddress(int battle) throws IOException {
@@ -109,7 +109,7 @@ public class StoryUtils {
 
     // Returns the Battle name, along with the Map location.
     public static List<String> getMissionStringIdentifiers(int startAddress) throws IOException {
-        ByteBuffer byteBuffer = Utils.seekRaf(startAddress, new byte[20]);
+        ByteBuffer byteBuffer = Utils.seekDolRaf(startAddress, new byte[20]);
         MapLocation mapLocation = MapLocation.get(byteBuffer.get(0));
         String battle = mapLocation.getBattleNames()[byteBuffer.get(6)];
         return Arrays.asList(battle, mapLocation.getName());
@@ -121,16 +121,16 @@ public class StoryUtils {
 
     // Returns an IntBuffer of four words, each representing a script's address.
     public static IntBuffer getBattleScriptAddresses(int battle) throws IOException {
-        return Utils.seekRaf(BATTLE_SCRIPTS_START_ADDRESS + battle * 16, new byte[16]).asIntBuffer();
+        return Utils.seekDolRaf(BATTLE_SCRIPTS_START_ADDRESS + battle * 16, new byte[16]).asIntBuffer();
     }
 
     public static List<MissionEvent> readBattleScript(int startAddress) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+        RandomAccessFile raf = Utils.getDolRaf();
         List<MissionEvent> missionEvents = new ArrayList<>();
         byte[] magic = new byte[32];
 
         while (true) {
-            ByteBuffer byteBuffer = Utils.seekRaf(raf, startAddress, magic);
+            ByteBuffer byteBuffer = Utils.seekDolRaf(raf, startAddress, magic);
             if (byteBuffer.getShort(0) == (short) 0xffff || byteBuffer.getShort(0) == 0x7fff)
                 break;
             int timer1 = byteBuffer.getShort(0x0) & 0xffff;
@@ -180,7 +180,7 @@ public class StoryUtils {
     }
 
     public static void addStory(int index, int configurationAddress, List<Integer> scriptAddresses) throws IOException {
-        RandomAccessFile raf = Utils.getRaf();
+        RandomAccessFile raf = Utils.getDolRaf();
 
         // Determine the current size of the file
         long fileSize = raf.length();
