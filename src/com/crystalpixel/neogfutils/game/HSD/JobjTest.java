@@ -22,7 +22,6 @@ public class JobjTest {
         System.out.println("TX: " + jObj.getTX());
         System.out.println("TY: " + jObj.getTY());
         System.out.println("TZ: " + jObj.getTZ());
-        
 
         if (jObj.getNext() != null) {
             System.out.println("-------------------------------------");
@@ -33,7 +32,8 @@ public class JobjTest {
         JObj jObj = new JObj();
 
         jObj.setClassName(dummy[0].getThird());
-        jObj.setFlags(JObjFlags.CLASSICAL_SCALING, JObjFlags.BILLBOARD, JObjFlags.VBILLBOARD, JObjFlags.JOINT1);
+        jObj.setFlags(JObjFlags.CLASSICAL_SCALING, JObjFlags.BILLBOARD, JObjFlags.VBILLBOARD, JObjFlags.HBILLBOARD,
+                JObjFlags.JOINT1, JObjFlags.JOINT2, JObjFlags.EFFECTOR, JObjFlags.RBILLBOARD);
         jObj.setTX(dummy[0].getFourth().getX());
         jObj.setTY(dummy[0].getFourth().getY());
         jObj.setTZ(dummy[0].getFourth().getZ());
@@ -51,7 +51,7 @@ public class JobjTest {
 
     @SuppressWarnings("unchecked")
     private static void initDummy() {
-        dummy = new Tuple[]{
+        dummy = new Tuple[] {
                 new Tuple<>(1, 2, "TopN", new Vector3f(1.0f, 2.0f, 3.0f), new Vector3f(4.0f, 5.0f, 6.0f)),
                 new Tuple<>(3, 4, "Object2", new Vector3f(7.0f, 8.0f, 9.0f), new Vector3f(10.0f, 11.0f, 12.0f))
         };

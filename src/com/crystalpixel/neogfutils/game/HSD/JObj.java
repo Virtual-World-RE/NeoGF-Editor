@@ -25,19 +25,15 @@ public class JObj extends TreeAccessor<JObj> {
         int value = _s.getInt(0x04);
         List<JObjFlags> flagsList = new ArrayList<>();
     
-        if ((value & JObjFlags.BILLBOARD.getValue()) != 0) {
+        if ((value & JObjFlags.BILLBOARD.getValue()) != 0 && (value & JObjFlags.VBILLBOARD.getValue()) != 0) {
+            flagsList.add(JObjFlags.HBILLBOARD);
+        } else if ((value & JObjFlags.BILLBOARD.getValue()) != 0) {
             flagsList.add(JObjFlags.BILLBOARD);
         } else if ((value & JObjFlags.VBILLBOARD.getValue()) != 0) {
             flagsList.add(JObjFlags.VBILLBOARD);
-        } else if ((value & JObjFlags.HBILLBOARD.getValue()) != 0) {
-            flagsList.add(JObjFlags.HBILLBOARD);
-        } else if ((value & JObjFlags.RBILLBOARD.getValue()) != 0) {
-            flagsList.add(JObjFlags.RBILLBOARD);
-        } else if ((value & JObjFlags.PBILLBOARD.getValue()) != 0) {
-            flagsList.add(JObjFlags.PBILLBOARD);
         }
     
-        if ((value & (JObjFlags.JOINT1.getValue() | JObjFlags.JOINT2.getValue())) != 0) {
+        if ((value & JObjFlags.JOINT1.getValue()) != 0 && (value & JObjFlags.JOINT2.getValue()) != 0) {
             flagsList.add(JObjFlags.EFFECTOR);
         } else {
             if ((value & JObjFlags.JOINT1.getValue()) != 0) {
@@ -50,7 +46,6 @@ public class JObj extends TreeAccessor<JObj> {
     
         for (JObjFlags flag : JObjFlags.values()) {
             if (flag != JObjFlags.BILLBOARD && flag != JObjFlags.VBILLBOARD && flag != JObjFlags.HBILLBOARD &&
-                flag != JObjFlags.RBILLBOARD && flag != JObjFlags.PBILLBOARD &&
                 flag != JObjFlags.EFFECTOR && flag != JObjFlags.JOINT1 && flag != JObjFlags.JOINT2) {
                 if ((value & flag.getValue()) != 0) {
                     flagsList.add(flag);
