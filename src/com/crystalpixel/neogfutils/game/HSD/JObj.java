@@ -10,7 +10,7 @@ public class JObj extends TreeAccessor<JObj> {
     public JObj() {
         super(JObj.class);
         super.trimmedSize = 0x40;
-        init();
+        super.init();
     }
 
     public String getClassName() {
@@ -199,7 +199,13 @@ public class JObj extends TreeAccessor<JObj> {
         return _s.getReference(0x3C, RObj.class);
     }
 
+    
     public void setRObj(RObj value) {
         _s.setReference(0x3C, value);
+    }
+    
+    @Override
+    protected int trim() {
+        return super.trim();
     }
 }

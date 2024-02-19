@@ -33,13 +33,28 @@ public class JobjTest {
 
         jObj.setClassName(dummy[0].getThird());
         jObj.setFlags(JObjFlags.CLASSICAL_SCALING, JObjFlags.BILLBOARD, JObjFlags.VBILLBOARD, JObjFlags.HBILLBOARD,
-                JObjFlags.JOINT1, JObjFlags.JOINT2, JObjFlags.EFFECTOR, JObjFlags.RBILLBOARD);
+                JObjFlags.JOINT1, JObjFlags.JOINT2, JObjFlags.EFFECTOR, JObjFlags.RBILLBOARD, JObjFlags.PBILLBOARD);
         jObj.setTX(dummy[0].getFourth().getX());
         jObj.setTY(dummy[0].getFourth().getY());
         jObj.setTZ(dummy[0].getFourth().getZ());
         jObj.setRX(dummy[0].getFifth().getX());
         jObj.setRY(dummy[0].getFifth().getY());
         jObj.setRZ(dummy[0].getFifth().getZ());
+        jObj.setSX(1f);
+        jObj.setSY(1f);
+        jObj.setSZ(1f);
+
+        JObj jObj2 = new JObj();
+        jObj.setNext(jObj2);
+        jObj.setClassName(dummy[1].getThird());
+        jObj.setFlags(JObjFlags.CLASSICAL_SCALING, JObjFlags.BILLBOARD, JObjFlags.VBILLBOARD, JObjFlags.HBILLBOARD,
+                 JObjFlags.RBILLBOARD, JObjFlags.PBILLBOARD);
+        jObj.setTX(dummy[1].getFourth().getX());
+        jObj.setTY(dummy[1].getFourth().getY());
+        jObj.setTZ(dummy[1].getFourth().getZ());
+        jObj.setRX(dummy[1].getFifth().getX());
+        jObj.setRY(dummy[1].getFifth().getY());
+        jObj.setRZ(dummy[1].getFifth().getZ());
         jObj.setSX(1f);
         jObj.setSY(1f);
         jObj.setSZ(1f);
