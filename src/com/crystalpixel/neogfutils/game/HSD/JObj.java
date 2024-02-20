@@ -24,7 +24,7 @@ public class JObj extends TreeAccessor<JObj> {
     public JObjFlags[] getFlags() {
         int value = _s.getInt(0x04);
         List<JObjFlags> flagsList = new ArrayList<>();
-    
+
         if ((value & JObjFlags.BILLBOARD.getValue()) != 0 && (value & JObjFlags.VBILLBOARD.getValue()) != 0) {
             flagsList.add(JObjFlags.HBILLBOARD);
         } else if ((value & JObjFlags.BILLBOARD.getValue()) != 0) {
@@ -32,7 +32,7 @@ public class JObj extends TreeAccessor<JObj> {
         } else if ((value & JObjFlags.VBILLBOARD.getValue()) != 0) {
             flagsList.add(JObjFlags.VBILLBOARD);
         }
-    
+
         if ((value & JObjFlags.JOINT1.getValue()) != 0 && (value & JObjFlags.JOINT2.getValue()) != 0) {
             flagsList.add(JObjFlags.EFFECTOR);
         } else {
@@ -43,20 +43,18 @@ public class JObj extends TreeAccessor<JObj> {
                 flagsList.add(JObjFlags.JOINT2);
             }
         }
-    
+
         for (JObjFlags flag : JObjFlags.values()) {
             if (flag != JObjFlags.BILLBOARD && flag != JObjFlags.VBILLBOARD && flag != JObjFlags.HBILLBOARD &&
-                flag != JObjFlags.EFFECTOR && flag != JObjFlags.JOINT1 && flag != JObjFlags.JOINT2) {
+                    flag != JObjFlags.EFFECTOR && flag != JObjFlags.JOINT1 && flag != JObjFlags.JOINT2) {
                 if ((value & flag.getValue()) != 0) {
                     flagsList.add(flag);
                 }
             }
         }
-    
+
         return flagsList.toArray(new JObjFlags[0]);
     }
-         
-       
 
     public void setFlags(JObjFlags... value) {
         int combinedValue = 0;
@@ -199,11 +197,106 @@ public class JObj extends TreeAccessor<JObj> {
         return _s.getReference(0x3C, RObj.class);
     }
 
-    
     public void setRObj(RObj value) {
         _s.setReference(0x3C, value);
     }
-    
+
+    public float getDefaultValue(JointTrackType type) {
+        switch (type) {
+            case HSD_A_J_TRAX:
+                return getTX();
+            case HSD_A_J_TRAY:
+                return getTY();
+            case HSD_A_J_TRAZ:
+                return getTZ();
+            case HSD_A_J_ROTX:
+                return getRX();
+            case HSD_A_J_ROTY:
+                return getRY();
+            case HSD_A_J_ROTZ:
+                return getRZ();
+            case HSD_A_J_SCAX:
+                return getSX();
+            case HSD_A_J_SCAY:
+                return getSY();
+            case HSD_A_J_SCAZ:
+                return getSZ();
+            default:
+                break;
+        }
+        return 0;
+    }
+
+    public void updateFlags() {
+        updateFlags(true);
+    }
+
+    private void updateFlags(boolean isRoot) {
+        if (Child != null) {
+            Child.updateFlags(false);
+        }
+
+        if (Next != null) {
+            Next.updateFlags(false);
+        }
+
+        if (getDObj() != null) {
+            boolean[] flags = new boolean[5];
+
+            for (DObj dobj : getDObj().getList()) {
+                MObj mobj = dobj.getMObj();
+                if (mobj != null) {
+                    flags[0] |= RenderMode.contains(mobj.getFlags(), RenderMode.XLU);
+                    flags[1] |= !RenderMode.contains(mobj.getFlags(), RenderMode.XLU);
+                    flags[2] |= RenderMode.contains(mobj.getFlags(), RenderMode.DIFFUSE);
+                    flags[3] |= RenderMode.contains(mobj.getFlags(), RenderMode.SPECULAR);
+                }
+
+                if (dobj.getPObj() != null) {
+                    for (PObj pObj : dobj.getPObj().getList()) {
+                        flags[4] |= PObjFlags.contains(pObj.getFlags(), PObjFlags.ENVELOPE);
+                    }
+                }
+            }
+
+            setFlag(JObjFlags.OPA, flags[1]);
+            setFlag(JObjFlags.valueOf(JObjFlags.XLU.getValue() | JObjFlags.TEXEDGE.getValue()), flags[0]);
+            setFlag(JObjFlags.SPECULAR, flags[3]);
+            setFlag(JObjFlags.LIGHTING, flags[2]);
+            setFlag(JObjFlags.ENVELOPE_MODEL, flags[4]);
+        }
+
+        setFlag(JObjFlags.SKELETON, getInverseWorldTransform() != null);
+        setFlag(JObjFlags.ROOT_XLU, childHasFlag(Child, JObjFlags.XLU));
+        setFlag(JObjFlags.ROOT_OPA, childHasFlag(Child, JObjFlags.OPA));
+        setFlag(JObjFlags.ROOT_TEXEDGE, childHasFlag(Child, JObjFlags.TEXEDGE));
+        setFlag(JObjFlags.SKELETON_ROOT, isRoot && childHasFlag(Child, JObjFlags.SKELETON));
+    }
+
+    private static boolean childHasFlag(JObj jobj, JObjFlags flag) {
+        if (jobj == null) {
+            return false;
+        }
+        if (JObjFlags.contains(jobj.getFlags(), flag)) {
+            return true;
+        }
+        if (jobj.Child != null && childHasFlag(jobj.Child, flag)) {
+            return true;
+        }
+        if (jobj.Next != null && childHasFlag(jobj.Next, flag)) {
+            return true;
+        }
+        return false;
+    }
+
+    private void setFlag(JObjFlags flag, boolean value) {
+        if (value) {
+            JObjFlags.add(this.getFlags(), flag);
+        } else {
+            JObjFlags.remove(this.getFlags(), flag);
+        }
+    }
+
     @Override
     protected int trim() {
         return super.trim();

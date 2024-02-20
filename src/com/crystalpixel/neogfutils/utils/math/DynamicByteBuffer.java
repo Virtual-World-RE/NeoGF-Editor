@@ -69,11 +69,25 @@ public class DynamicByteBuffer {
         return buffer[index];
     }
 
+    public void set(int index, byte value) {
+        buffer[index] = value;
+    }    
+
     public void putShort(short value) {
         ensureCapacity(2);
         buffer[position++] = (byte) (value >> 8);
         buffer[position++] = (byte) value;
     }
+
+    public short getShort(int index) {
+        int value = (buffer[index] << 8) | (buffer[index + 1] & 0xFF);
+        return (short) value;
+    }
+    
+    public void setShort(int index, short value) {
+        buffer[index] = (byte) (value >> 8);
+        buffer[index + 1] = (byte) value;
+    }    
 
     public void setInt(int index, int value) {
         buffer[index] = (byte) (value >> 24);
