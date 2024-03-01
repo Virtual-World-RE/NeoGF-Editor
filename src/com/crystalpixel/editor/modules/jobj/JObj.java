@@ -1,8 +1,17 @@
-package com.crystalpixel.neogfutils.game.HSD;
+package com.crystalpixel.editor.modules.jobj;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.crystalpixel.editor.modules.mobj.MObj;
+import com.crystalpixel.editor.modules.mobj.RenderMode;
+import com.crystalpixel.neogfutils.game.HSD.DObj;
+import com.crystalpixel.neogfutils.game.HSD.Matrix4x3;
+import com.crystalpixel.neogfutils.game.HSD.PObj;
+import com.crystalpixel.neogfutils.game.HSD.PObjFlags;
+import com.crystalpixel.neogfutils.game.HSD.ParticleJoint;
+import com.crystalpixel.neogfutils.game.HSD.RObj;
+import com.crystalpixel.neogfutils.game.HSD.Spline;
 import com.crystalpixel.neogfutils.utils.accesor.TreeAccessor;
 
 public class JObj extends TreeAccessor<JObj> {
@@ -203,23 +212,23 @@ public class JObj extends TreeAccessor<JObj> {
 
     public float getDefaultValue(JointTrackType type) {
         switch (type) {
-            case HSD_A_J_TRAX:
+            case A_J_TRAX:
                 return getTX();
-            case HSD_A_J_TRAY:
+            case A_J_TRAY:
                 return getTY();
-            case HSD_A_J_TRAZ:
+            case A_J_TRAZ:
                 return getTZ();
-            case HSD_A_J_ROTX:
+            case A_J_ROTX:
                 return getRX();
-            case HSD_A_J_ROTY:
+            case A_J_ROTY:
                 return getRY();
-            case HSD_A_J_ROTZ:
+            case A_J_ROTZ:
                 return getRZ();
-            case HSD_A_J_SCAX:
+            case A_J_SCAX:
                 return getSX();
-            case HSD_A_J_SCAY:
+            case A_J_SCAY:
                 return getSY();
-            case HSD_A_J_SCAZ:
+            case A_J_SCAZ:
                 return getSZ();
             default:
                 break;

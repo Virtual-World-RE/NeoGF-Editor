@@ -8,7 +8,7 @@
 [![NeoGF](https://img.shields.io/badge/NeoGF-1.0%20SNAPSHOT-orange)](https://img.shields.io/badge/NeoGF-1.0%20SNAPSHOT-orange)
 
 # NeoGF Editor
-Open Source Editor for Gotcha Force ans HSD Engine.
+Open Source Editor for Gotcha Force and HSD Engine.
 
 
 ## License

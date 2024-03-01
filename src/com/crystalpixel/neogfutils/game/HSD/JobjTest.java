@@ -3,6 +3,8 @@ package com.crystalpixel.neogfutils.game.HSD;
 import java.io.IOException;
 import java.util.Arrays;
 
+import com.crystalpixel.editor.modules.jobj.JObj;
+import com.crystalpixel.editor.modules.jobj.JObjFlags;
 import com.crystalpixel.neogfutils.utils.Tuple;
 import com.crystalpixel.neogfutils.utils.math.vector.Vector3f;
 

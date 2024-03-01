@@ -1,4 +1,4 @@
-package com.crystalpixel.neogfutils.game.HSD;
+package com.crystalpixel.editor.modules.jobj;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,12 +1,17 @@
 package com.crystalpixel.neogfutils.system;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
+import com.crystalpixel.editor.modules.disc.Disc;
+import com.crystalpixel.editor.modules.disc.DiscType;
+import com.crystalpixel.editor.modules.disc.Region;
 import com.crystalpixel.neogfutils.battle.Battle;
 import com.crystalpixel.neogfutils.battle.entity.Position;
 import com.crystalpixel.neogfutils.utils.story.StoryUtils;
@@ -66,5 +71,43 @@ public class test {
         String jsonString = gson.toJson(jsonOutput);
 
         System.out.println(jsonString);
+    }
+
+    public static class test2 {
+        public static void main(String[] args) {
+            try {
+                Path isoFilePath = Paths.get("D:/Bordel/0/GotchaForce(Europe)(En,Fr,De).iso/");
+
+                byte[] isoFileContent = Files.readAllBytes(isoFilePath);
+
+                Disc disc = new Disc();
+                disc._s.put(isoFileContent);
+
+                DiscType discType = disc.getType();
+                String gameCode = disc.getGameCode();
+                Region region = disc.getRegion();
+                String gameTitle = disc.getGameTitle();
+
+                System.out.println("Disc Type : " + discType);
+                System.out.println("GameCode : " + gameCode);
+                System.out.println("Region : " + region);
+                System.out.println("MarkerCode : " + disc.getMakerCode());
+                System.out.println("DiscNumber : " + disc.getDiscNumber());
+                System.out.println("Audio Streaming : " + disc.isAudioStreaming());
+                System.out.println("Streaming Buffer Size : " + disc.getStreamingBufferSize());
+                System.out.println("Magic Word : " + disc.getMagicWord());
+                System.out.println("GameTitle : " + gameTitle);
+                System.out.println("Debug Monitor Offset : " + disc.getDebugMonitorOffset());
+                System.out.println("Debug Monitor Load Address : " + disc.getDebugMonitorLoadAddress());
+                System.out.println("Main Dol Offset : " + disc.getMainDolOffset());
+                System.out.println("FST Offset : " + disc.geFst().getFSTOffset());
+                System.out.println("FST Size : " + disc.geFst().getFSTSize());
+                System.out.println("Max FST Size : " + disc.geFst().getMaxFSTSize());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

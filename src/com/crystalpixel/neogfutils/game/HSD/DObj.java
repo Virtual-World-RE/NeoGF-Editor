@@ -1,5 +1,6 @@
 package com.crystalpixel.neogfutils.game.HSD;
 
+import com.crystalpixel.editor.modules.mobj.MObj;
 import com.crystalpixel.neogfutils.utils.accesor.ListAccessor;
 
 public class DObj extends ListAccessor<DObj> {
