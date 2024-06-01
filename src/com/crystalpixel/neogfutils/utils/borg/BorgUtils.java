@@ -179,8 +179,7 @@ public class BorgUtils {
         StringBuilder name = new StringBuilder();
         while (true) {
             buffer = Utils.seekDolRaf(raf, nameAddress, new byte[2]);
-            if (buffer.getShort(0) == 0)
-                break;
+            if (buffer.get(0) == 0) break;
             name.append(new String(buffer.array(), "Shift_JIS"));
             nameAddress += 2;
         }

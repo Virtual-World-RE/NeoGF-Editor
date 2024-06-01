@@ -146,6 +146,18 @@ public class BattleParser {
         }
     }
 
+    // Returns multiple RAM write codes, starting from the address provided.
+    private String makeActionReplayCodes(int address, byte[] data) {
+        StringBuilder code = new StringBuilder();
+        ByteBuffer dataBuffer = ByteBuffer.wrap(data);
+        while (dataBuffer.hasRemaining()) {
+            int addressLine = (0x00ffffff & address) | 0x04000000;
+            int dataLine = dataBuffer.getInt();
+            code.append(String.format("%08x %08x", addressLine, dataLine));
+        }
+        return code.toString();
+    }
+
     //TODO: move to a utils class.
     private void makeAmmoBorgLevelStatsCode(int startAddress, BorgLevelStats[] borgLevelStats) {
         int levelCount = 20;

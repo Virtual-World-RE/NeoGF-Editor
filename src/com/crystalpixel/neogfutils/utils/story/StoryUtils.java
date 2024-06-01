@@ -16,12 +16,13 @@ import com.crystalpixel.neogfutils.battle.entity.Position;
 import com.crystalpixel.neogfutils.event.*;
 import com.crystalpixel.neogfutils.game.*;
 import com.crystalpixel.neogfutils.system.BorgSpecies;
+import com.crystalpixel.neogfutils.system.MissionScript;
 import com.crystalpixel.neogfutils.utils.Utils;
 
 public class StoryUtils {
 
     private static final int BATTLE_ADDRESSES_START_ADDRESS = 0x8035fa04;
-    private static final int BATTLE_SCRIPTS_START_ADDRESS = 0x803832c8;
+    public static final int BATTLE_SCRIPTS_START_ADDRESS = 0x803832c8;
     private static final int BATTLE_CONFIGURATION_START_ADDRESS = 0x803864c8;
     private static final int OPPONENT_START_ADDRESS = 0x803867e8;
 
@@ -124,17 +125,19 @@ public class StoryUtils {
         return Utils.seekDolRaf(BATTLE_SCRIPTS_START_ADDRESS + battle * 16, new byte[16]).asIntBuffer();
     }
 
-    public static List<MissionEvent> readBattleScript(int startAddress) throws IOException {
+    public static MissionScript readBattleScript(int startAddress) throws IOException {
+        MissionScript missionScript = new MissionScript();
         RandomAccessFile raf = Utils.getDolRaf();
-        List<MissionEvent> missionEvents = new ArrayList<>();
         byte[] magic = new byte[32];
 
         while (true) {
             ByteBuffer byteBuffer = Utils.seekDolRaf(raf, startAddress, magic);
-            if (byteBuffer.getShort(0) == (short) 0xffff || byteBuffer.getShort(0) == 0x7fff)
-                break;
             int timer1 = byteBuffer.getShort(0x0) & 0xffff;
             int timer2 = byteBuffer.getShort(0x2) & 0xffff;
+            if (timer1 >= 0x7fff) {
+                missionScript.setEventRepeatCount(timer2);
+                break;
+            }
             int slot1 = byteBuffer.getShort(0x4) & 0xffff;
             int slot2 = byteBuffer.getShort(0x6) & 0xffff;
             int eventType = byteBuffer.get(0xa) & 0xff;
@@ -142,31 +145,31 @@ public class StoryUtils {
             switch (eventType) {
                 case 0x70:
                 case 0x71:
-                    continue;
+                    break;
                 case 0x72: {
-                    missionEvents.add(new MusicEvent(timer1, timer2, slot1, slot2, Music.get(byteBuffer.get(0xb))));
+                    missionScript.getMissionEvents().add(new MusicEvent(timer1, timer2, slot1, slot2, Music.get(byteBuffer.get(0xb))));
                     break;
                 }
                 case 0x73: {
-                    missionEvents.add(new FocusEvent(timer1, timer2, slot1, slot2,
+                    missionScript.getMissionEvents().add(new FocusEvent(timer1, timer2, slot1, slot2,
                             BorgSpecies.getBorgSpecies(byteBuffer.getShort(0x8) & 0xffff), byteBuffer.get(0xb) == 1,
                             byteBuffer.get(0x10), byteBuffer.getFloat(0x14), byteBuffer.getFloat(0x18)));
                     break;
                 }
                 case 0x74: {
-                    missionEvents.add(
+                    missionScript.getMissionEvents().add(
                             new SpeechEvent(timer1, timer2, slot1, slot2, Commander.get(byteBuffer.get(0xb) & 0xff),
                                     byteBuffer.get(0xc) & 0xff, byteBuffer.get(0xd) == 1, byteBuffer.get(0xe) == 1));
                     break;
                 }
                 case 0x75:
                 case 0x76: {
-                    missionEvents.add(new VoiceEvent(timer1, timer2, slot1, slot2,
+                    missionScript.getMissionEvents().add(new VoiceEvent(timer1, timer2, slot1, slot2,
                             Commander.get(byteBuffer.get(0xb) & 0xff), true));
                     break;
                 }
                 default: {
-                    missionEvents.add(new SpawnEvent(timer1, timer2, slot1, slot2,
+                    missionScript.getMissionEvents().add(new SpawnEvent(timer1, timer2, slot1, slot2,
                             byteBuffer.getShort(0x8) & 0xffff, eventType, Commander.get(byteBuffer.get(0xb) & 0xff),
                             byteBuffer.get(0xc) >> 4, byteBuffer.get(0xc) & 0xf, byteBuffer.get(0xd) & 0xff,
                             byteBuffer.get(0xe) & 0xff, byteBuffer.get(0xf) == 1, byteBuffer.get(0x10) == 1,
@@ -176,8 +179,63 @@ public class StoryUtils {
                 }
             }
         }
-        return missionEvents;
+        return missionScript;
     }
+
+//    public static List<MissionEvent> readBattleScript(int startAddress) throws IOException {
+//        RandomAccessFile raf = Utils.getDolRaf();
+//        List<MissionEvent> missionEvents = new ArrayList<>();
+//        byte[] magic = new byte[32];
+//
+//        while (true) {
+//            ByteBuffer byteBuffer = Utils.seekDolRaf(raf, startAddress, magic);
+//            if (byteBuffer.getShort(0) == (short) 0xffff || byteBuffer.getShort(0) == 0x7fff)
+//                break;
+//            int timer1 = byteBuffer.getShort(0x0) & 0xffff;
+//            int timer2 = byteBuffer.getShort(0x2) & 0xffff;
+//            int slot1 = byteBuffer.getShort(0x4) & 0xffff;
+//            int slot2 = byteBuffer.getShort(0x6) & 0xffff;
+//            int eventType = byteBuffer.get(0xa) & 0xff;
+//            startAddress += magic.length;
+//            switch (eventType) {
+//                case 0x70:
+//                case 0x71:
+//                    break;
+//                case 0x72: {
+//                    missionEvents.add(new MusicEvent(timer1, timer2, slot1, slot2, Music.get(byteBuffer.get(0xb))));
+//                    break;
+//                }
+//                case 0x73: {
+//                    missionEvents.add(new FocusEvent(timer1, timer2, slot1, slot2,
+//                            BorgSpecies.getBorgSpecies(byteBuffer.getShort(0x8) & 0xffff), byteBuffer.get(0xb) == 1,
+//                            byteBuffer.get(0x10), byteBuffer.getFloat(0x14), byteBuffer.getFloat(0x18)));
+//                    break;
+//                }
+//                case 0x74: {
+//                    missionEvents.add(
+//                            new SpeechEvent(timer1, timer2, slot1, slot2, Commander.get(byteBuffer.get(0xb) & 0xff),
+//                                    byteBuffer.get(0xc) & 0xff, byteBuffer.get(0xd) == 1, byteBuffer.get(0xe) == 1));
+//                    break;
+//                }
+//                case 0x75:
+//                case 0x76: {
+//                    missionEvents.add(new VoiceEvent(timer1, timer2, slot1, slot2,
+//                            Commander.get(byteBuffer.get(0xb) & 0xff), true));
+//                    break;
+//                }
+//                default: {
+//                    missionEvents.add(new SpawnEvent(timer1, timer2, slot1, slot2,
+//                            byteBuffer.getShort(0x8) & 0xffff, eventType, Commander.get(byteBuffer.get(0xb) & 0xff),
+//                            byteBuffer.get(0xc) >> 4, byteBuffer.get(0xc) & 0xf, byteBuffer.get(0xd) & 0xff,
+//                            byteBuffer.get(0xe) & 0xff, byteBuffer.get(0xf) == 1, byteBuffer.get(0x10) == 1,
+//                            byteBuffer.get(0x11) & 0xf8, byteBuffer.get(0x11) & 0x3, new Position(
+//                                    byteBuffer.getFloat(0x14), byteBuffer.getFloat(0x18), byteBuffer.getFloat(0x1c))));
+//                    break;
+//                }
+//            }
+//        }
+//        return missionEvents;
+//    }
 
     public static void addStory(int index, int configurationAddress, List<Integer> scriptAddresses) throws IOException {
         RandomAccessFile raf = Utils.getDolRaf();

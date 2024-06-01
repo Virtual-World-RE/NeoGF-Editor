@@ -28,7 +28,7 @@ public class BattleBorgDetails {
         Map<Integer, Integer> borgCounts = new TreeMap<>();
         while (scriptAddresses.hasRemaining()) {
             spawnEvents.addAll(
-                       StoryUtils.readBattleScript(scriptAddresses.get())
+                       StoryUtils.readBattleScript(scriptAddresses.get()).getMissionEvents()
                        .stream()
                        .filter(event -> event instanceof SpawnEvent)
                        .map(event -> (SpawnEvent) event)

@@ -20,7 +20,7 @@ public class BorgCombinationCostCalculator {
         List<SpawnEvent> spawnEvents = new ArrayList<>();
         Map<Integer, Integer> borgCounts = new TreeMap<>();
         while (scriptAddresses.hasRemaining()) {
-            spawnEvents.addAll(StoryUtils.readBattleScript(scriptAddresses.get()).stream().filter(se ->
+            spawnEvents.addAll(StoryUtils.readBattleScript(scriptAddresses.get()).getMissionEvents().stream().filter(se ->
                     se instanceof SpawnEvent).map(SpawnEvent.class::cast).collect(Collectors.toList()));
         }
         spawnEvents.forEach(be -> borgCounts.put(be.getId(), borgCounts.containsKey(be.getId()) ? borgCounts.get(be.getId()) + 1 : 1));

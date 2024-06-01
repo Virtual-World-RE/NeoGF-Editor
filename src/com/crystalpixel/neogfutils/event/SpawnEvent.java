@@ -145,16 +145,19 @@ public class SpawnEvent extends MissionEvent {
         ByteBuffer buffer = ByteBuffer.wrap(super.getAsBytes());
         buffer.putShort(0x8, (short) getId());
         buffer.put(0xa, (byte) getLevel());
-        buffer.put(0xb, (byte) getCommander().ordinal());
+        Commander commander = getCommander();
+        buffer.put(0xb, (byte) (commander == null ? -1 : commander.ordinal()));
         buffer.put(0xc, (byte) (getDifficulty() | getVoiceListIndex() << 4));
         buffer.put(0xd, (byte) getStationary());
         buffer.put(0xe, (byte) getIntelligence());
         buffer.put(0xf, (byte) (isChannelBoolean() ? 1 : 0));
         buffer.put(0x10, (byte) (isBoss() ? 1 : 0));
         buffer.put(0x11, (byte) (getRotation() | getEntrance()));
-        buffer.putFloat(0x14, (float) getPosition().getX());
-        buffer.putFloat(0x18, (float) getPosition().getY());
-        buffer.putFloat(0x1c, (float) getPosition().getZ());
+        Position position = getPosition();
+        if (position == null) position = Position.ZERO;
+        buffer.putFloat(0x14, (float) position.getX());
+        buffer.putFloat(0x18, (float) position.getY());
+        buffer.putFloat(0x1c, (float) position.getZ());
         return buffer.array();
     }
 }

@@ -1,6 +1,7 @@
 package com.crystalpixel.neogfutils.event;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import com.crystalpixel.neogfutils.annotation.NotNull;
 import com.crystalpixel.neogfutils.system.Serializable;
@@ -67,5 +68,16 @@ public abstract class MissionEvent implements Serializable {
         buffer.putShort(0x4, ((short) getSlot1()));
         buffer.putShort(0x6, ((short) getSlot2()));
         return buffer.array();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof MissionEvent)) return false;
+        return Arrays.equals(this.getAsBytes(), ((MissionEvent) o).getAsBytes());
+    }
+
+    @Override
+    public int hashCode() {
+        return getAsBytes()[0xa];
     }
 }
